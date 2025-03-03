@@ -1,0 +1,44 @@
+.slider-container {
+    width: 100vw;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.slide {
+    transition: transform 0.5s ease-in-out;
+    padding: 0 5px; /* Adjust spacing between images */
+}
+
+.slide img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover;
+    display: block;
+}
+
+/* Position the navigation arrows on top of the images */
+.slick-prev, .slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.slick-prev {
+    left: 20px;
+}
+
+.slick-next {
+    right: 20px;
+}
+
+/* Hide default slick dots and customize */
+.slick-dots {
+    bottom: 10px;
+}
+
+.slick-dots li button:before {
+    color: white;
+}

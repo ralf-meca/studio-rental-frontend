@@ -1,0 +1,59 @@
+/* Center the login box */
+.admin-login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+/* Login form styling */
+.admin-login-box {
+    width: 100%;
+    max-width: 350px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Input fields */
+.admin-login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Submit button */
+.admin-login-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: black !important;
+    color: white !important;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #19191a 0 -3px 0 inset;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-login-box button:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #19191a 0 -3px 0 inset;
+}
+.admin-login-box button:focus {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #19191a 0 -3px 0 inset;
+}
+.admin-login-box button:active {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #19191a 0 -3px 0 inset;
+}
+
+/* Error message */
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
