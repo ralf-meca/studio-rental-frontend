@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {useEffect, useMemo} from 'react'
-import {TextField} from "@mui/material";
-import {Controller, FormProvider, useFormContext} from "react-hook-form";
+import { FormProvider, useFormContext} from "react-hook-form";
 import SelectRHF from "../../../../components/shared-components/SelectRHF.tsx";
 import {ILabelValueOption} from "../../../../shared/types.ts";
 import {FIELD_REQUIRED_DEFAULT_CONFIG} from "../../../../shared/shared.constants.ts";
@@ -87,33 +86,17 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
     return <>
         <div className="col-12 mb-4">
             <FormProvider {...methods}>
-                <DatePickerRHF/>
+                <DatePickerRHF
+                    label="Which day?"
+                    controllerProps={{
+                        control: methods?.control,
+                        name: "date",
+                        rules: {
+                            required: FIELD_REQUIRED_DEFAULT_CONFIG,
+                        }
+                    }}
+                />
             </FormProvider>
-            <div className="my-2">.</div>
-            <Controller
-                name="date"
-                control={methods?.control}
-                render={({field, fieldState}) => (
-                    <TextField
-                        type="date"
-                        label="Which day?"
-                        sx={{width: "100%"}}
-                        slotProps={{
-                            inputLabel: {shrink: true}, // Ensures label is always visible
-                            htmlInput: {
-                                // Can't select dates previous than today's date
-                                min: dayjs().format("yyyy-MM-dd"),
-                                // Can't select a date further than 2 months from today's date
-                                max: dayjs().add(2, 'month').format('YYYY-MM-DD')
-                            }
-                        }}
-
-                        {...field}
-                        error={!!fieldState.error}
-                        helperText={fieldState.error?.message}
-                    />
-                )}
-            />
         </div>
         <div className="row">
             <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-4">

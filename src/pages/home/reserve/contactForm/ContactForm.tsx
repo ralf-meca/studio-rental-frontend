@@ -1,13 +1,16 @@
 import * as React from 'react'
-import {ReactNode, useState} from 'react'
-import {useFormContext} from "react-hook-form";
+import {ReactNode, useEffect, useState} from 'react'
+import {Controller, useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "../reservation.consants.ts";
+import TextFieldRHF from "../../../../components/shared-components/TextFieldRHF.tsx";
+import {FIELD_REQUIRED_DEFAULT_CONFIG} from "../../../../shared/shared.constants.ts";
+import {TextField} from "@mui/material";
 
 interface IContactFormProps {
 }
 
 const ContactForm: React.FC<IContactFormProps> = () => {
-    const {register, formState: {errors}} = useFormContext<IReservationFormValues>()
+    const {register, control, watch, formState: {errors}} = useFormContext<IReservationFormValues>()
     const [uploadedImage, setUploadedImage] = useState<string>()
 
 
@@ -32,25 +35,63 @@ const ContactForm: React.FC<IContactFormProps> = () => {
         }
     }
 
-    return <div className="col-md-6 col-sm-6 col-xs-12" id="reserve">
-        <input
-            {...register("name", {required: "Mandatory"})}
-            className="form-control mb-4" placeholder="Emër"
-        />
-        {errors?.name &&
-            <span className="errorMessage">{errors.name.message as ReactNode}</span>
-        }
-        <input {...register("email", {validate: value => validateEmail(value)})}
-               className="form-control mb-4" placeholder="E-mail"
-        />
-        {errors?.email &&
-            <span className="errorMessage">{errors.email.message as ReactNode}</span>}
+    useEffect(() => {
+        console.log('errors', errors)
+        console.log('errors', errors)
+        console.log('errors', watch())
+    }, [errors])
 
-        <input {...register("number", {validate: value => validatePhoneNumber(value)})}
-               className="form-control mb-4" placeholder="+355 XX XXX XXXX"
+    return <div className="col-md-6 col-sm-6 col-xs-12" id="reserve">
+        <TextFieldRHF
+            label="Name"
+            controllerProps={{
+                name: "name",
+                control,
+                rules: {
+                    required: FIELD_REQUIRED_DEFAULT_CONFIG,
+                }
+            }}
+            className="mb-4"
         />
-        {errors?.number &&
-            <span className="errorMessage">{errors.number.message as ReactNode}</span>}
+        <TextFieldRHF
+            label="E-mail"
+            controllerProps={{
+                name: "email",
+                control,
+                rules: {
+                    validate: value => validateEmail(value),
+                }
+            }}
+            className="mb-4"
+        />
+
+        <Controller
+            name="number"
+            control={control}
+            rules={{
+                validate: value => validatePhoneNumber(value),
+            }}
+            render={({field, fieldState}) => {
+
+                return <div className="mb-4">
+                    <TextField
+                        label={<>
+                            Number
+                            <span style={{color: 'red', fontSize: 22}}>
+                                *
+                            </span>
+                        </>}
+                        error={!!fieldState.error}
+                        helperText={fieldState?.error?.message}
+                        fullWidth
+                        type="number"
+                        placeholder="355 XX XXX XXXX"
+                        {...field}
+                        slotProps={{htmlInput: {inputMode: 'numeric'}}}
+                    />
+                </div>
+            }}
+        />
 
         <input {...register("idPhoto", {required: "Mandatory"})}
                className="form-control mb-4" type="file" accept="image/*"

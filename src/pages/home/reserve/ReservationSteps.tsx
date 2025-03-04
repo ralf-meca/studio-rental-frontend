@@ -14,7 +14,7 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined'
 import {styled} from '@mui/material/styles'
 import {StepConnector, stepConnectorClasses, StepIconProps} from "@mui/material"
 import DateHourPicker from "./DateHourPicker/DateHourPicker.tsx"
-import {useFormContext} from "react-hook-form"
+import {SubmitHandler, useFormContext} from "react-hook-form"
 import {IReservationFormValues} from "./reservation.consants.ts"
 import LightsReservation from "./lightsReservation/LightsReservation.tsx";
 import ContactForm from "./contactForm/ContactForm.tsx";
@@ -127,8 +127,13 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
             !methods?.watch("date") || !methods?.watch("startingHour") || !methods?.watch("endingHour")
         , [methods?.watch("date"), methods?.watch("startingHour"), methods?.watch("endingHour")])
 
-    return (
+    const handleReservationSubmit: SubmitHandler<IReservationFormValues> = async(formValues: IReservationFormValues) => {
+        console.log('formValues',formValues)
+    }
+
+        return (
         <Box>
+            <form onSubmit={methods?.handleSubmit(handleReservationSubmit)}>
             <Stepper activeStep={activeStep} orientation="vertical" connector={<ColorlibConnector/>}>
                 {/* Select date and hours step */}
                 <Step key="1">
@@ -210,7 +215,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
                     </StepContent>
                 </Step>
 
-                {/* Submit request Step */}
+                {/* Contact Form Submit request Step */}
                 <Step key="4">
                     <StepLabel
                         slots={{stepIcon: ColorlibStepIcon}}
@@ -221,7 +226,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
                     <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
                         <ContactForm/>
                         <Box sx={{mb: 2}}>
-                            <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}>
+                            <Button variant="contained" type="submit" sx={{mt: 1, mr: 1}}>
                                 Book Now!
                             </Button>
                             <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
@@ -239,6 +244,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
                     </Button>
                 </Paper>
             )}
+            </form>
         </Box>
     )
 }

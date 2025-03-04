@@ -4,15 +4,15 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale'
-import {Controller, useFormContext} from "react-hook-form";
+import {Controller, UseControllerProps} from "react-hook-form";
 
 
 interface IDatePickerRHFProps {
+    label?: string
+    controllerProps: UseControllerProps<any>
 }
 
-const DatePickerRHF: React.FC<IDatePickerRHFProps> = () => {
-
-    const methods = useFormContext()
+const DatePickerRHF: React.FC<IDatePickerRHFProps> = ({label, controllerProps}) => {
 
     // Making the calendar's weeks start with Monday
     dayjs.extend(updateLocale)
@@ -29,11 +29,10 @@ const DatePickerRHF: React.FC<IDatePickerRHFProps> = () => {
     return <>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Controller
-                name="date"
-                control={methods?.control}
+                {...controllerProps}
                 render={({field: {onChange, value}}) => (
                     <DatePicker
-                        label="Which day?"
+                        label={label}
                         value={dayjs(value) ?? ""}
                         onChange={value => onChange(dayjs(value).format("YYYY-MM-DD"))}
                         shouldDisableDate={isWeekend} // Disable Saturdays & Sundays

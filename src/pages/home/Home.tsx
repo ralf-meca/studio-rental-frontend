@@ -26,16 +26,16 @@ const Home: React.FC = () => {
     const reservationColumnSizes = useMemo(() => activeStep === 0 ? "col-sm-12 col-md-4 col-lg-4 col-xl-4" : "col-sm-12 col-md-12 col-lg-7 col-xl-7"
         , [activeStep])
 
-    const docWidth = document.documentElement.offsetWidth;
+    // const docWidth = document.documentElement.offsetWidth;
 
-    [].forEach.call(
-        document.querySelectorAll('*'),
-        function(el: any) {
-            if (el.offsetWidth > docWidth) {
-                console.log(el);
-            }
-        }
-    );
+    // [].forEach.call(
+    //     document.querySelectorAll('*'),
+    //     function(el: any) {
+    //         if (el.offsetWidth > docWidth) {
+    //             console.log(el);
+    //         }
+    //     }
+    // );
 
     const handleButtonClick = async () => {
         try {
