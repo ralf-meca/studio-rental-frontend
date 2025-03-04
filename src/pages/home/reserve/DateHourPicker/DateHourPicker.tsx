@@ -1,12 +1,13 @@
 import * as React from 'react'
 import {useEffect, useMemo} from 'react'
 import {TextField} from "@mui/material";
-import {Controller, useFormContext} from "react-hook-form";
-import {addMonths, format} from "date-fns";
+import {Controller, FormProvider, useFormContext} from "react-hook-form";
 import SelectRHF from "../../../../components/shared-components/SelectRHF.tsx";
 import {ILabelValueOption} from "../../../../shared/types.ts";
 import {FIELD_REQUIRED_DEFAULT_CONFIG} from "../../../../shared/shared.constants.ts";
 import {IReservationFormValues} from "../reservation.consants.ts";
+import DatePickerRHF from "../../../../components/shared-components/DatePickerRHF.tsx";
+import dayjs from 'dayjs';
 
 interface IDateHourPickerProps {
 }
@@ -27,7 +28,7 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
 
 
     // todo @ralf change with available hours array when available from the service response
-    const mockedTimeList: ILabelValueOption[] = [
+    const openHoursList: ILabelValueOption[] = [
         {label: "06:00", value: "06:00"},
         {label: "07:00", value: "07:00"},
         {label: "08:00", value: "08:00"},
@@ -51,40 +52,44 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
 
     // Gets all the available hours for the day and filers them to display on the startingHour Select
     const mockedTimeStartingTimeList = useMemo(() => {
-        const theHourAtTheMoment = format(new (Date), "HH:mm")
+        const theHourAtTheMoment = dayjs().format("HH:mm")
 
         // Closing time is 23:00 so the latest selectable starting time of the day can be 21:00
-        const availableHours = mockedTimeList.filter(item => item.value !== "22:00" && item.value !== "23:00")
+        const availableHours = openHoursList.filter(item => item.value !== "22:00" && item.value !== "23:00")
 
         // Find the index of the current hour in availableHours
-        const startingIndex = mockedTimeList.findIndex(item => item.value === theHourAtTheMoment)
+        const startingIndex = openHoursList.findIndex(item => item.value === theHourAtTheMoment)
 
         // If current time is found, and if today's date is selected return all remaining available hours of the day
-        return startingIndex >= 0  && methods?.watch("date") === format(new Date, "yyyy-MM-dd")
+        return startingIndex >= 0 && methods?.watch("date") === dayjs().format("yyyy-MM-dd")
             ? availableHours.slice(startingIndex + 1)
             : availableHours
 
     }, [methods?.watch("date")])
 
-    const mockedEndingTimeList = useMemo(() => {
+    const endingTimeList = useMemo(() => {
         const startingHour = methods?.watch("startingHour");
 
         if (!startingHour) {
             return []
         }
-        // Find the index of the selected starting hour in mockedTimeList
-        const startingIndex = mockedTimeList.findIndex(item => item.value === startingHour);
+        // Find the index of the selected starting hour in openHoursList
+        const startingIndex = openHoursList.findIndex(item => item.value === startingHour);
 
         // We return the remaining hours skipping the selected hour and one more hour
         // (so if startingHour is 09:00, the endingHour list starts with 11:00)
-        return startingIndex >= 0 && startingIndex + 2 < mockedTimeList.length
-            ? mockedTimeList.slice(startingIndex + 2) // Skip one and show the next one
+        return startingIndex >= 0 && startingIndex + 2 < openHoursList.length
+            ? openHoursList.slice(startingIndex + 2) // Skip one and show the next one
             : [] // Return empty if no valid hour can be selected after skipping
 
     }, [methods?.watch("startingHour")])
 
     return <>
         <div className="col-12 mb-4">
+            <FormProvider {...methods}>
+                <DatePickerRHF/>
+            </FormProvider>
+            <div className="my-2">.</div>
             <Controller
                 name="date"
                 control={methods?.control}
@@ -97,11 +102,12 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
                             inputLabel: {shrink: true}, // Ensures label is always visible
                             htmlInput: {
                                 // Can't select dates previous than today's date
-                                min: format(new Date(), "yyyy-MM-dd"),
+                                min: dayjs().format("yyyy-MM-dd"),
                                 // Can't select a date further than 2 months from today's date
-                                max: addMonths(format(new Date(), "yyyy-MM-dd"), 2)
+                                max: dayjs().add(2, 'month').format('YYYY-MM-DD')
                             }
                         }}
+
                         {...field}
                         error={!!fieldState.error}
                         helperText={fieldState.error?.message}
@@ -113,7 +119,7 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
             <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-4">
                 <SelectRHF
                     options={mockedTimeStartingTimeList}
-                    disabledOptions={[{label: "10:00",value: "10:00"}]}
+                    disabledOptions={[{label: "10:00", value: "10:00"}]}
                     label="Start"
                     disabled={!methods?.watch("date")} // If the date has not been selected the hour shouldn't be selectable either
                     controllerProps={{
@@ -128,7 +134,7 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
             </div>
             <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-4">
                 <SelectRHF
-                    options={mockedEndingTimeList}
+                    options={endingTimeList}
                     label="End"
                     // If the date or the starting hour has not been selected, the ending hour shouldn't be selectable either
                     disabled={!methods?.watch("date") || !methods?.watch("startingHour")}

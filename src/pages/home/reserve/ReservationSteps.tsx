@@ -16,12 +16,12 @@ import {StepConnector, stepConnectorClasses, StepIconProps} from "@mui/material"
 import DateHourPicker from "./DateHourPicker/DateHourPicker.tsx"
 import {useFormContext} from "react-hook-form"
 import {IReservationFormValues} from "./reservation.consants.ts"
-import {format} from "date-fns";
 import LightsReservation from "./lightsReservation/LightsReservation.tsx";
 import ContactForm from "./contactForm/ContactForm.tsx";
 import Rules from "./Rules.tsx";
 import RuleIcon from '@mui/icons-material/Rule';
 import CheckboxRHF from "../../../components/CheckBoxRHF.tsx";
+import dayjs from "dayjs";
 
 const ColorlibStepIconRoot = styled('div')<{ ownerState: { completed?: boolean, active?: boolean } }>(({theme}) => ({
     backgroundColor: '#ccc',
@@ -135,7 +135,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
                     <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
                         {activeStep === 0
                             ? "Select date and hours"
-                            : `${!!methods?.watch("date") ? format(methods?.watch("date"), "dd/MM/yyyy") : ""} - From ${methods?.watch("startingHour")} To ${methods?.watch("endingHour")}`
+                            : `${!!methods?.watch("date") ? dayjs(methods?.watch("date")).format("DD/MM/YYYY") : ""} - From ${methods?.watch("startingHour")} To ${methods?.watch("endingHour")}`
                         }
                     </StepLabel>
                     <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0", alignContent: "middle"}}>

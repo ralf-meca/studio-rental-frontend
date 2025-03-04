@@ -2,11 +2,11 @@ import * as React from 'react'
 import {useMemo, useState} from 'react'
 import {useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "./reserve/reservation.consants.ts";
-import {differenceInHours, parse} from "date-fns";
 import Typography from "@mui/material/Typography";
 import {Divider, Link} from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import dayjs from "dayjs";
 
 interface ISummarySectionProps {
 }
@@ -20,11 +20,11 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
 
     const hoursReservedInTotal = useMemo(() => {
         // Here we format the hours into a date format to use build in date-fns function to compare them
-        const startingHour = parse(methods?.watch("startingHour"), "HH:mm", new Date())
-        const endingHour = parse(methods?.watch("endingHour"), "HH:mm", new Date())
+        const startingHour = dayjs(methods?.watch("startingHour"), "HH:mm")
+        const endingHour = dayjs(methods?.watch("endingHour"), "HH:mm")
 
         // Get the difference in minutes, then convert to hours
-        return differenceInHours(endingHour, startingHour)
+        return endingHour.diff(startingHour, "hour")
     }, [methods])
 
     const totalPrice = useMemo(() => {
