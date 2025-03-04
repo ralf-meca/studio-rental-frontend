@@ -22,6 +22,7 @@ interface ISelectRHFProps {
     includeEmptyOption?: boolean
     controllerProps: UseControllerProps<any>
     isTimeSelect?: boolean
+    disabledOptions?: ILabelValueOption[]
 }
 
 /**
@@ -40,7 +41,8 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
         label,
         options,
         controllerProps,
-        isTimeSelect = false
+        isTimeSelect = false,
+        disabledOptions
     } = props
 
     return (
@@ -75,7 +77,7 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
                                         overflowY: 'auto', // Enable scrolling
                                     },
                                 },
-                                }}
+                            }}
                             onChange={(e: any) => {
                                 field?.onChange && field?.onChange(e)
                             }}
@@ -84,7 +86,15 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
                             <MenuItem style={{height: 34}} key="empty_option" value={""}/>}
                         {Array.isArray(options) && !!options?.length ? (
                             options?.map((option, index) => (
-                                <MenuItem key={`${controllerProps?.name}_${index}`} value={option?.value} style={{width: "100%"}}>
+                                <MenuItem
+                                    key={`${controllerProps?.name}_${index}`}
+                                    value={option?.value}
+                                    style={{
+                                        width: "100%",
+                                        textDecoration: !!disabledOptions?.filter(el => el?.value === option.value).length ? "line-through" : "none"
+                                    }}
+                                    disabled={!!disabledOptions?.filter(el => el?.value === option.value).length}
+                                >
                                     {option?.label}
                                 </MenuItem>
                             ))

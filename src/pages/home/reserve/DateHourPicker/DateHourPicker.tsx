@@ -113,6 +113,7 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = () => {
             <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-4">
                 <SelectRHF
                     options={mockedTimeStartingTimeList}
+                    disabledOptions={[{label: "10:00",value: "10:00"}]}
                     label="Start"
                     disabled={!methods?.watch("date")} // If the date has not been selected the hour shouldn't be selectable either
                     controllerProps={{

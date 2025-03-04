@@ -3,3 +3,4 @@ export interface ILabelValueOption<ValueType = string> {
     value: ValueType
     meta?: any
 }
+

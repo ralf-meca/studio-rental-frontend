@@ -14,20 +14,25 @@ const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx')
 
 const router = createBrowserRouter([
     {
-        element: <RouterWrapper/>,
+        element: <RouterWrapper isAdmin={false}/>,
         children: [
             {path: "/", element: <Home/>},
+            {path: "admin/login", element: <AdminLogin/>}
+        ],
+    },
+    {
+        element: <RouterWrapper isAdmin={true}/>, // Separate wrapper for admin pages
+        children: [
             {
-                path: "/admin",
-                element: <ProtectedRoute/>,
+                path: "admin",
+                element: <ProtectedRoute/>, // Protect all admin routes
                 children: [
                     {path: "dashboard", element: <Dashboard/>},
-                    {path: "orders", element: <OrdersPage/>}
-                ]
+                    {path: "orders", element: <OrdersPage/>},
+                ],
             },
-            {path: "admin/login", element: <AdminLogin/>}
-        ]
-    }
+        ],
+    },
 ]);
 
 function App() {

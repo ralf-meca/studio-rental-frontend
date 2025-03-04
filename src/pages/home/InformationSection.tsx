@@ -298,7 +298,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
             <Typography fontSize={20} fontWeight={600} className="mt-4">Map</Typography>
             <div className="d-flex justify-content-center mb-4">
                 <iframe
-                    width="600"
+                    width="100%"
                     height="450"
                     style={{border: 0}}
                     loading="lazy"
