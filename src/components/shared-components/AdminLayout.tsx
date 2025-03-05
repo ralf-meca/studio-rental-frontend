@@ -3,8 +3,7 @@ import {ReactNode} from 'react';
 import {extendTheme} from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
+import BlockIcon from '@mui/icons-material/Block';
 import LayersIcon from '@mui/icons-material/Layers';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {AppProvider, Navigation} from '@toolpad/core/AppProvider';
@@ -33,26 +32,34 @@ const NAVIGATION: Navigation = [
         kind: 'divider',
     },
     {
+        segment: 'block-dates-and-hours',
+        title: 'Block dates and hours',
+        icon: <BlockIcon />,
+    },
+    {
+        kind: 'divider',
+    },
+    {
         kind: 'header',
         title: 'Analytics',
     },
-    {
-        segment: 'reports',
-        title: 'Reports',
-        icon: <BarChartIcon />,
-        children: [
-            {
-                segment: 'sales',
-                title: 'Sales',
-                icon: <DescriptionIcon />,
-            },
-            {
-                segment: 'traffic',
-                title: 'Traffic',
-                icon: <DescriptionIcon />,
-            },
-        ],
-    },
+    // {
+    //     segment: 'reports',
+    //     title: 'Reports',
+    //     icon: <BarChartIcon />,
+    //     children: [
+    //         {
+    //             segment: 'sales',
+    //             title: 'Sales',
+    //             icon: <DescriptionIcon />,
+    //         },
+    //         {
+    //             segment: 'traffic',
+    //             title: 'Traffic',
+    //             icon: <DescriptionIcon />,
+    //         },
+    //     ],
+    // },
     {
         segment: 'integrations',
         title: 'Integrations',

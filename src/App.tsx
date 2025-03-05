@@ -11,13 +11,14 @@ const Home = lazy(() => import('./pages/home/Home.tsx'))
 const OrdersPage = lazy(() => import('./pages/admin-pages/orders/OrdersPage.tsx'))
 const Dashboard = lazy(() => import('./pages/admin-pages/dashboard/Dashboard.tsx'))
 const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx'))
+const BlockDatesAndHours = lazy(() => import('./pages/admin-pages/blockDatesAndHours/BlockDatesAndHoursPage.tsx'))
 
 const router = createBrowserRouter([
     {
         element: <RouterWrapper isAdmin={false}/>,
         children: [
             {path: "/", element: <Home/>},
-            {path: "admin/login", element: <AdminLogin/>}
+            {path: "admin/login", element: <AdminLogin/>} // using the normal RouterWrapper
         ],
     },
     {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
                 children: [
                     {path: "dashboard", element: <Dashboard/>},
                     {path: "orders", element: <OrdersPage/>},
+                    {path: "block-dates-and-hours", element: <BlockDatesAndHours/>},
                 ],
             },
         ],
