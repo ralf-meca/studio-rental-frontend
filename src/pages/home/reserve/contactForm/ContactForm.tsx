@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useState} from 'react'
+import {ReactNode, useState} from 'react'
 import {Controller, useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "../reservation.consants.ts";
 import TextFieldRHF from "../../../../components/shared-components/TextFieldRHF.tsx";
@@ -10,7 +10,7 @@ interface IContactFormProps {
 }
 
 const ContactForm: React.FC<IContactFormProps> = () => {
-    const {register, control, watch, formState: {errors}} = useFormContext<IReservationFormValues>()
+    const {register, control, formState: {errors}} = useFormContext<IReservationFormValues>()
     const [uploadedImage, setUploadedImage] = useState<string>()
 
 
@@ -34,12 +34,6 @@ const ContactForm: React.FC<IContactFormProps> = () => {
             return "Please enter a valid email"
         }
     }
-
-    useEffect(() => {
-        console.log('errors', errors)
-        console.log('errors', errors)
-        console.log('errors', watch())
-    }, [errors])
 
     return <div className="col-md-6 col-sm-6 col-xs-12" id="reserve">
         <TextFieldRHF

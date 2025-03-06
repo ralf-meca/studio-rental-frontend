@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Dispatch, SetStateAction, useMemo} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import Box from '@mui/material/Box'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -12,7 +12,7 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined'
 import {styled} from '@mui/material/styles'
-import {StepConnector, stepConnectorClasses, StepIconProps} from "@mui/material"
+import {StepConnector, stepConnectorClasses, StepIconProps, Tooltip} from "@mui/material"
 import DateHourPicker from "./DateHourPicker/DateHourPicker.tsx"
 import {SubmitHandler, useFormContext} from "react-hook-form"
 import {IReservationFormValues} from "./reservation.consants.ts"
@@ -22,6 +22,7 @@ import Rules from "./Rules.tsx";
 import RuleIcon from '@mui/icons-material/Rule';
 import CheckboxRHF from "../../../components/CheckBoxRHF.tsx";
 import dayjs from "dayjs";
+import {getBlockedDatesAndHours} from "../../admin-pages/blockAvailability/block-availability.utils.ts";
 
 const ColorlibStepIconRoot = styled('div')<{ ownerState: { completed?: boolean, active?: boolean } }>(({theme}) => ({
     backgroundColor: '#ccc',
@@ -127,123 +128,143 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
             !methods?.watch("date") || !methods?.watch("startingHour") || !methods?.watch("endingHour")
         , [methods?.watch("date"), methods?.watch("startingHour"), methods?.watch("endingHour")])
 
-    const handleReservationSubmit: SubmitHandler<IReservationFormValues> = async(formValues: IReservationFormValues) => {
-        console.log('formValues',formValues)
+    const handleReservationSubmit: SubmitHandler<IReservationFormValues> = async (formValues: IReservationFormValues) => {
+        console.log('formValues', formValues)
     }
 
-        return (
+    // Get the blocked dates and hours on page landing and everytime the month changes
+    useEffect(() => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+            methods?.setValue('blockedHoursAndDays', value)
+        })
+    }, [methods?.watch("currentMonth")])
+
+    return (
         <Box>
             <form onSubmit={methods?.handleSubmit(handleReservationSubmit)}>
-            <Stepper activeStep={activeStep} orientation="vertical" connector={<ColorlibConnector/>}>
-                {/* Select date and hours step */}
-                <Step key="1">
-                    <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
-                        {activeStep === 0
-                            ? "Select date and hours"
-                            : `${!!methods?.watch("date") ? dayjs(methods?.watch("date")).format("DD/MM/YYYY") : ""} - From ${methods?.watch("startingHour")} To ${methods?.watch("endingHour")}`
-                        }
-                    </StepLabel>
-                    <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0", alignContent: "middle"}}>
-                        <div className="d-flex justify-content-center mb-2">
-                            <Typography fontSize={20} fontWeight="bold">10&#8364;</Typography>
-                            <Typography fontSize={12} sx={{display: "flex", alignItems: "end"}}>
-                                /Hour
-                            </Typography>
-                        </div>
-                        <div className="d-flex justify-content-center mb-1">
-                            <Typography fontSize={12} sx={{display: "flex", alignItems: "end"}}>
-                                2 h minimum
-                            </Typography>
-                        </div>
-                        <DateHourPicker/>
-                        <Box sx={{mb: 2}}>
-                            <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}
-                                    disabled={isDateAndHoursContinueButtonDisabled}
-                            >
-                                Continue
-                            </Button>
-                        </Box>
-                    </StepContent>
-                </Step>
+                <div className="d-flex justify-content-center">
+                <Typography fontSize={30} fontWeight={300}>Reserve</Typography>
+                </div>
+                <Stepper activeStep={activeStep} orientation="vertical" connector={<ColorlibConnector/>}>
+                    {/* Select date and hours step */}
+                    <Step key="1">
+                        <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
+                            {activeStep === 0
+                                ? "Select date and hours"
+                                : `${!!methods?.watch("date") ? dayjs(methods?.watch("date")).format("DD/MM/YYYY") : ""} - From ${methods?.watch("startingHour")} To ${methods?.watch("endingHour")}`
+                            }
+                        </StepLabel>
+                        <StepContent
+                            sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0", alignContent: "middle"}}>
+                            <div className="d-flex justify-content-center mb-2">
+                                <Typography fontSize={20} fontWeight="bold">10&#8364;</Typography>
+                                <Typography fontSize={12} sx={{display: "flex", alignItems: "end"}}>
+                                    /Hour
+                                </Typography>
+                            </div>
+                            <div className="d-flex justify-content-center mb-1">
+                                <Typography fontSize={12} sx={{display: "flex", alignItems: "end"}}>
+                                    2 h minimum
+                                </Typography>
+                            </div>
 
-                {/*Select lights rental step*/}
-                <Step key="2">
-                    <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
-                        Select lights rental
-                    </StepLabel>
-                    <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
-                        <LightsReservation/>
-                        <Box sx={{mb: 2}}>
-                            <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}>
-                                Continue
-                            </Button>
-                            <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
-                                Back
-                            </Button>
-                        </Box>
-                    </StepContent>
-                </Step>
+                            <DateHourPicker/>
 
-                {/* Rules */}
-                <Step key="3">
-                    <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
-                        Rules
-                    </StepLabel>
-                    <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
-                        <Rules/>
-                        <CheckboxRHF
-                            label="I have read and accept the Terms and Conditions of Visual Minds, as well as the rules and cancellation policy of the venue"
-                            controllerProps={{
-                                control: methods?.control,
-                                name: "isConditionsAccepted",
-                            }}
-                            sx={{
-                                marginTop: "10px"
-                            }}
-                        />
+                            <Box sx={{mb: 2}}>
+                                <Tooltip title={
+                                    (!methods?.watch("date") || !methods?.watch("startingHour") || !methods?.watch("endingHour"))
+                                        ? "Select date and the hours to continue" : ""
+                                }>
+                                    <span>
+                                        <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}
+                                                disabled={isDateAndHoursContinueButtonDisabled}
+                                        >
+                                            Continue
+                                        </Button>
+                                    </span>
+                                </Tooltip>
+                            </Box>
+                        </StepContent>
+                    </Step>
 
-                        <Box sx={{mb: 2}}>
-                            <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}
-                                    disabled={!methods?.watch('isConditionsAccepted')}
-                            >
-                                Accept & continue
-                            </Button>
-                            <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
-                                Back
-                            </Button>
-                        </Box>
-                    </StepContent>
-                </Step>
+                    {/*Select lights rental step*/}
+                    <Step key="2">
+                        <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
+                            Select lights rental
+                        </StepLabel>
+                        <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
+                            <LightsReservation/>
+                            <Box sx={{mb: 2}}>
+                                <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}>
+                                    Continue
+                                </Button>
+                                <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
+                                    Back
+                                </Button>
+                            </Box>
+                        </StepContent>
+                    </Step>
 
-                {/* Contact Form Submit request Step */}
-                <Step key="4">
-                    <StepLabel
-                        slots={{stepIcon: ColorlibStepIcon}}
-                        optional={<Typography variant="caption">Last step</Typography>}
-                    >
-                        Submit request
-                    </StepLabel>
-                    <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
-                        <ContactForm/>
-                        <Box sx={{mb: 2}}>
-                            <Button variant="contained" type="submit" sx={{mt: 1, mr: 1}}>
-                                Book Now!
-                            </Button>
-                            <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
-                                Back
-                            </Button>
-                        </Box>
-                    </StepContent>
-                </Step>
-            </Stepper>
-            {activeStep === 4 && (
-                <Paper square elevation={0} sx={{p: 3}}>
-                    <Typography>Booking request sent - you will be notified via email</Typography>
-                    <Button onClick={handleReset} sx={{mt: 1, mr: 1}}>
-                        Reset
-                    </Button>
-                </Paper>
-            )}
+                    {/* Rules */}
+                    <Step key="3">
+                        <StepLabel slots={{stepIcon: ColorlibStepIcon}}>
+                            Rules
+                        </StepLabel>
+                        <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
+                            <Rules/>
+                            <CheckboxRHF
+                                label="I have read and accept the Terms and Conditions of Visual Minds, as well as the rules and cancellation policy of the venue"
+                                controllerProps={{
+                                    control: methods?.control,
+                                    name: "isConditionsAccepted",
+                                }}
+                                sx={{
+                                    marginTop: "10px"
+                                }}
+                            />
+
+                            <Box sx={{mb: 2}}>
+                                <Button variant="contained" onClick={handleNext} sx={{mt: 1, mr: 1}}
+                                        disabled={!methods?.watch('isConditionsAccepted')}
+                                >
+                                    Accept & continue
+                                </Button>
+                                <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
+                                    Back
+                                </Button>
+                            </Box>
+                        </StepContent>
+                    </Step>
+
+                    {/* Contact Form Submit request Step */}
+                    <Step key="4">
+                        <StepLabel
+                            slots={{stepIcon: ColorlibStepIcon}}
+                            optional={<Typography variant="caption">Last step</Typography>}
+                        >
+                            Submit request
+                        </StepLabel>
+                        <StepContent sx={{marginLeft: "14px", borderLeft: "1.8px solid #eaeaf0"}}>
+                            <ContactForm/>
+                            <Box sx={{mb: 2}}>
+                                <Button variant="contained" type="submit" sx={{mt: 1, mr: 1}}>
+                                    Book Now!
+                                </Button>
+                                <Button onClick={handleBack} sx={{mt: 1, mr: 1}}>
+                                    Back
+                                </Button>
+                            </Box>
+                        </StepContent>
+                    </Step>
+                </Stepper>
+                {activeStep === 4 && (
+                    <Paper square elevation={0} sx={{p: 3}}>
+                        <Typography>Booking request sent - you will be notified via email</Typography>
+                        <Button onClick={handleReset} sx={{mt: 1, mr: 1}}>
+                            Reset
+                        </Button>
+                    </Paper>
+                )}
             </form>
         </Box>
     )

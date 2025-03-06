@@ -8,7 +8,6 @@ interface IRouterWrapperProps {
 }
 
 const RouterWrapper: FC<IRouterWrapperProps> = ({isAdmin}) => {
-    console.log('isAdmin',isAdmin)
 
     return <div>
         {isAdmin

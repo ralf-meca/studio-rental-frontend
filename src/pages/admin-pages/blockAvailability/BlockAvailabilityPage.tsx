@@ -38,15 +38,14 @@ function a11yProps(index: number) {
 export default function BasicTabs() {
     const [value, setValue] = React.useState(0);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-        console.log('event',event)
+    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue)
     };
 
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs value={value} onChange={handleChange} aria-label="availability tabs">
                     <Tab label="Block hours" {...a11yProps(0)} />
                     <Tab label="Block single day" {...a11yProps(1)} />
                     <Tab label="Block multiple days" {...a11yProps(2)} />

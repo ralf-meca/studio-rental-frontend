@@ -4,15 +4,17 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale'
-import {Controller, UseControllerProps} from "react-hook-form";
+import {Controller, UseControllerProps, useFormContext} from "react-hook-form";
 
 
 interface IDatePickerRHFProps {
     label?: string
     controllerProps: UseControllerProps<any>
+    isAdmin: boolean
 }
 
-const DatePickerRHF: React.FC<IDatePickerRHFProps> = ({label, controllerProps}) => {
+const DatePickerRHF: React.FC<IDatePickerRHFProps> = ({label, controllerProps, isAdmin}) => {
+    const {watch, setValue} = useFormContext()
 
     // Making the calendar's weeks start with Monday
     dayjs.extend(updateLocale)
@@ -20,10 +22,14 @@ const DatePickerRHF: React.FC<IDatePickerRHFProps> = ({label, controllerProps}) 
         weekStart: 1,
     })
 
-    // Function to disable weekends (Saturdays & Sundays)
-    const isWeekend = (date: dayjs.Dayjs) => {
-        const day = date.day();
-        return day === 0 || day === 6; // Sunday (0) or Saturday (6)
+    const isDateBooked = (day: string) => {
+        const dayBlocked = watch("blockedHoursAndDays")?.filter((el: any) => el.date === day)[0]
+
+        if (dayBlocked?.isAllDayBlocked) return true
+        // If all hours are reserved and user is client the entire day should be disabled
+        if (dayBlocked?.hoursBlocked.length === 18 && !isAdmin) return true
+        // If nothing is found the day is not disabled
+        return false
     }
 
     return <>
@@ -35,12 +41,14 @@ const DatePickerRHF: React.FC<IDatePickerRHFProps> = ({label, controllerProps}) 
                         label={label}
                         value={dayjs(value) ?? ""}
                         onChange={value => onChange(dayjs(value).format("YYYY-MM-DD"))}
-                        shouldDisableDate={isWeekend} // Disable Saturdays & Sundays
+                        onMonthChange={(newMonth) => setValue("currentMonth", newMonth.format("YYYY-MM"))}
+                        shouldDisableDate={day => isDateBooked(dayjs(day).format("YYYY-MM-DD"))}
                         minDate={dayjs()} // Can't select dates previous than today's date
                         maxDate={dayjs().add(3, "month")} // Can't select a date further than 2 months from today's date
                         views={["year", "month", "day"]}
                         format={"DD/MM/YYYY"}
                         sx={{width: "100%"}}
+                        orientation="portrait"
                     />
                 )}/>
         </LocalizationProvider>

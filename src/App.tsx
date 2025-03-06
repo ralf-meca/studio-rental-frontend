@@ -11,7 +11,7 @@ const Home = lazy(() => import('./pages/home/Home.tsx'))
 const OrdersPage = lazy(() => import('./pages/admin-pages/orders/OrdersPage.tsx'))
 const Dashboard = lazy(() => import('./pages/admin-pages/dashboard/Dashboard.tsx'))
 const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx'))
-const BlockDatesAndHours = lazy(() => import('./pages/admin-pages/blockDatesAndHours/BlockDatesAndHoursPage.tsx'))
+const BlockDatesAndHours = lazy(() => import('./pages/admin-pages/blockAvailability/BlockAvailabilityPage.tsx'))
 
 const router = createBrowserRouter([
     {

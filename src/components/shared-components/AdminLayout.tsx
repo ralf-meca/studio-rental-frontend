@@ -2,79 +2,48 @@ import * as React from 'react';
 import {ReactNode} from 'react';
 import {extendTheme} from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BlockIcon from '@mui/icons-material/Block';
-import LayersIcon from '@mui/icons-material/Layers';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {AppProvider, Navigation} from '@toolpad/core/AppProvider';
 import {DashboardLayout} from '@toolpad/core/DashboardLayout';
 import {PageContainer} from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import VisualMindsIcon from './../../assets/brand/visual-minds-logo-black.png'
 import {useLocation, useNavigate} from "react-router-dom";
 
 const NAVIGATION: Navigation = [
     {
-        kind: 'header',
-        title: 'Main items',
-    },
-    {
         segment: 'dashboard',
         title: 'Dashboard',
-        icon: <DashboardIcon />,
+        icon: <DashboardIcon/>,
+    },
+    {
+        kind: 'divider',
     },
     {
         segment: 'orders',
         title: 'Orders',
-        icon: <ShoppingCartIcon />,
-    },
-    {
-        kind: 'divider',
+        icon: <ListAltIcon/>,
     },
     {
         segment: 'block-dates-and-hours',
         title: 'Block dates and hours',
-        icon: <BlockIcon />,
+        icon: <BlockIcon/>,
     },
     {
         kind: 'divider',
-    },
-    {
-        kind: 'header',
-        title: 'Analytics',
-    },
-    // {
-    //     segment: 'reports',
-    //     title: 'Reports',
-    //     icon: <BarChartIcon />,
-    //     children: [
-    //         {
-    //             segment: 'sales',
-    //             title: 'Sales',
-    //             icon: <DescriptionIcon />,
-    //         },
-    //         {
-    //             segment: 'traffic',
-    //             title: 'Traffic',
-    //             icon: <DescriptionIcon />,
-    //         },
-    //     ],
-    // },
-    {
-        segment: 'integrations',
-        title: 'Integrations',
-        icon: <LayersIcon />,
     },
     /*** 🟢 BUTTON AT THE BOTTOM ***/
     {
         segment: 'logout',
         title: 'Log out',
-        icon: <LogoutIcon />,
+        icon: <LogoutIcon/>,
     }
 ];
 
-const demoTheme = extendTheme({
-    colorSchemes: { light: true, dark: true },
+const customTheme = extendTheme({
+    colorSchemes: {light: true, dark: false},
     colorSchemeSelector: 'class',
     breakpoints: {
         values: {
@@ -89,13 +58,34 @@ const demoTheme = extendTheme({
         h6: {
             color: "black !important"
         }
+    },
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                ul: {
+                    height: '100vh',
+                    margin: 0,
+                    padding: 0,
+                    listStyle: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'relative',
+                },
+                'ul li:last-child': {
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                },
+            },
+        },
     }
 });
 
 interface IAdminLayoutProps {
     children: ReactNode
 }
-const AdminLayout: React.FC<IAdminLayoutProps>= ({children}) => {
+
+const AdminLayout: React.FC<IAdminLayoutProps> = ({children}) => {
     const navigate = useNavigate()
     const {pathname} = useLocation()
 
@@ -103,7 +93,7 @@ const AdminLayout: React.FC<IAdminLayoutProps>= ({children}) => {
         <AppProvider
             navigation={NAVIGATION}
             branding={{
-                logo: <img src={VisualMindsIcon} alt="visual minds black logo" />,
+                logo: <img src={VisualMindsIcon} alt="visual minds black logo"/>,
                 title: 'Visual Minds Studio',
                 homeUrl: '/admin',
             }}
@@ -112,7 +102,7 @@ const AdminLayout: React.FC<IAdminLayoutProps>= ({children}) => {
                 searchParams: new URLSearchParams(),
                 navigate: (path: string | URL) => {
 
-                    if (path === "/logout"){
+                    if (path === "/logout") {
                         localStorage.removeItem('token')
                         navigate('/admin/login')
                         return
@@ -121,7 +111,7 @@ const AdminLayout: React.FC<IAdminLayoutProps>= ({children}) => {
                     navigate(`/admin${String(path)}`)
                 }
             }}
-            theme={demoTheme}
+            theme={customTheme}
             window={window}
         >
             <DashboardLayout>

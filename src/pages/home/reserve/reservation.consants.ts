@@ -15,4 +15,6 @@ export interface IReservationFormValues {
     number: string,
     idPhoto: string,
     isConditionsAccepted: boolean
+    currentMonth: string
+    blockedHoursAndDays: any[]
 }

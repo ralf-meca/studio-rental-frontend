@@ -23,6 +23,7 @@ interface ISelectRHFProps {
     controllerProps: UseControllerProps<any>
     isTimeSelect?: boolean
     disabledOptions?: ILabelValueOption[]
+    isAdmin?: boolean
 }
 
 /**
@@ -42,7 +43,8 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
         options,
         controllerProps,
         isTimeSelect = false,
-        disabledOptions
+        disabledOptions,
+        isAdmin= false
     } = props
 
     return (
@@ -91,9 +93,10 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
                                     value={option?.value}
                                     style={{
                                         width: "100%",
-                                        textDecoration: !!disabledOptions?.filter(el => el?.value === option.value).length ? "line-through" : "none"
+                                        textDecoration: !!disabledOptions?.filter(el => el?.value === option.value).length ? "line-through" : "none",
+                                        background: !!disabledOptions?.filter(el => el?.value === option.value).length && isAdmin ? "rgba(253,92,99,0.13)" : undefined,
                                     }}
-                                    disabled={!!disabledOptions?.filter(el => el?.value === option.value).length}
+                                    disabled={!isAdmin && !!disabledOptions?.filter(el => el?.value === option.value).length}
                                 >
                                     {option?.label}
                                 </MenuItem>
