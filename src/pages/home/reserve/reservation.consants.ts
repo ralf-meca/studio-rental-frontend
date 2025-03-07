@@ -12,8 +12,8 @@ export interface IReservationFormValues {
     selectedLights: ILight[]
     name: string,
     email: string,
-    number: string,
-    idPhoto: string,
+    number: number,
+    idPhoto: any,
     isConditionsAccepted: boolean
     currentMonth: string
     blockedHoursAndDays: any[]

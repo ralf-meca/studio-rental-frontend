@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 import "./../../index.css"
 import studioPhoto1 from "./../../assets/brand/studio-photo.jpeg"
 import studioPhoto2 from "./../../assets/brand/studio1.jpg"
@@ -9,17 +9,45 @@ import {ImageSlider} from "./imageSlider/ImageSlider.tsx";
 import ReservationSteps from "./reserve/ReservationSteps.tsx";
 import InformationSection from "./InformationSection.tsx";
 import SummarySection from "./SummarySection.tsx";
-import {FormProvider, useForm} from "react-hook-form";
+import {FormProvider, SubmitHandler, useForm} from "react-hook-form";
 import {IReservationFormValues} from "./reserve/reservation.consants.ts";
 import dayjs from "dayjs";
+import axios from "axios";
+import {enqueueSnackbar} from "notistack";
 
 const Home: React.FC = () => {
+    const [closeLastStep, setCloseLastStep] = useState<boolean>(false)
     const methods = useForm<IReservationFormValues>({
         defaultValues: {
             date: "",
-            currentMonth: dayjs().format("YYYY-MM")
+            currentMonth: dayjs().format("YYYY-MM"),
+            idPhoto: ''
         }
     })
+
+    const handleSubmitReservation: SubmitHandler<IReservationFormValues> = async (formValues: IReservationFormValues) => {
+        setCloseLastStep(true)
+
+        const formData = new FormData();
+        formData.append('date', formValues?.date)
+        formData.append('startingHour', formValues?.startingHour)
+        formData.append('endingHour', formValues?.endingHour)
+        formData.append('selectedLights', JSON.stringify(formValues?.selectedLights)); // Stringify array data
+        formData.append('name', formValues?.name)
+        formData.append('email', formValues?.email)
+        formData.append('number', formValues?.number.toString())
+        formData.append('idPhoto', formValues?.idPhoto?.[0])
+
+        // Send the request
+        axios.post('/api/reservations', formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        })
+            .then(() => {
+                setCloseLastStep(false) // reset state to false if user will do another reservation, it can work again
+                enqueueSnackbar("Booking request sent - you will be notified via email", {variant: 'success'})
+            })
+            .catch(error => console.error('Error:', error))
+    }
 
     const [activeStep, setActiveStep] = React.useState<number>(0)
 
@@ -45,9 +73,12 @@ const Home: React.FC = () => {
                 </div>
                 <div className={reservationColumnSizes}>
                     <div style={{position: "sticky", top: 0}}>
-                        <FormProvider {...methods}>
-                            <ReservationSteps activeStep={activeStep} setActiveStep={setActiveStep}/>
-                        </FormProvider>
+                        <form onSubmit={methods?.handleSubmit(handleSubmitReservation)}>
+                            <FormProvider {...methods}>
+                                <ReservationSteps activeStep={activeStep} setActiveStep={setActiveStep}
+                                                  closeLastStep={closeLastStep}/>
+                            </FormProvider>
+                        </form>
                     </div>
                 </div>
             </div>

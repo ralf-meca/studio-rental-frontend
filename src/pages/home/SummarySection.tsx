@@ -61,7 +61,7 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
                 </div>
                 <Divider sx={{bgcolor: "secondary.light"}}/>
                 {methods?.watch("selectedLights")?.map(light => <>
-                    <div className="row justify-content-between  mt-2">
+                    <div className="row justify-content-between  mt-2" key={light.name}>
                         <div className="col-7">
                             <Typography fontSize={15} fontWeight={150}>
                                 {light.name}
@@ -77,7 +77,6 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
                         </div>
                     </div>
                 </>)}
-                <Divider sx={{bgcolor: "secondary.light", marginTop: "10px"}}/>
             </div>
         </div>
     </section>

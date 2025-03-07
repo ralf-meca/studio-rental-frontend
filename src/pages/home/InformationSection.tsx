@@ -14,10 +14,10 @@ interface IInformationSectionProps {
 }
 
 const InformationSection: React.FC<IInformationSectionProps> = () => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false)
     const toggleContent = () => {
-        setIsExpanded(!isExpanded);
-    };
+        setIsExpanded(!isExpanded)
+    }
 
     const commodities = [
         "Chairs",
@@ -115,8 +115,8 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
                 <Typography color="gray">100 &#x33A1;</Typography>
             </div>
             <div className="d-flex">
-                <PersonIcon color="disabled"/>
-                <Typography color="gray">6 guests</Typography>
+                <PersonIcon color="disabled" style={{width: 20, margin: "0px 10px 0 10px"}}/>
+                <Typography color="gray" fontSize={15}>6 guests</Typography>
             </div>
         </div>
         <Divider sx={{bgcolor: "secondary.light"}}/>
@@ -264,7 +264,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
         {/* Lights */}
         <section>
             <Typography fontSize={20} fontWeight={600} className="mt-4">Rentable Lights</Typography>
-            {mockedDataLights?.map((light) => <>
+            {mockedDataLights?.map((light) => <div key={light.name}>
                 <div className="row mt-4">
                     <div className="col-3 d-flex justify-content-center">
                         <img src={light?.img} alt={light?.name} width={80} height="fit-content"/>
@@ -291,7 +291,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
                     </div>
                     <Divider sx={{bgcolor: "lightgray", marginTop: "15px"}}/>
                 </div>
-            </>)}
+            </div>)}
         </section>
         {/* Map */}
         <section>

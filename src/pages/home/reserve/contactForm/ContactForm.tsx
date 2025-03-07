@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ReactNode, useState} from 'react'
+import {useState} from 'react'
 import {Controller, useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "../reservation.consants.ts";
 import TextFieldRHF from "../../../../components/shared-components/TextFieldRHF.tsx";
@@ -10,17 +10,16 @@ interface IContactFormProps {
 }
 
 const ContactForm: React.FC<IContactFormProps> = () => {
-    const {register, control, formState: {errors}} = useFormContext<IReservationFormValues>()
+    const {register, control} = useFormContext<IReservationFormValues>()
     const [uploadedImage, setUploadedImage] = useState<string>()
 
-
-    // todo @ralf add errors into the form
-    const validatePhoneNumber = (number: string) => {
-        const numberRegex = /^(\+355\s?|0)?\s?6[7-9]\d\s?\d{3}\s?\d{4,5}$/;
+    const validatePhoneNumber = (number: number | null) => {
+        // Regex has in it all the european phone number prefixes
+        // const numberRegex = /^(?:\+|00)?(3[0-9]{1,2}|4[0-9]{1,2})\d{6,10}$/;
         if (!number) {
-            return "Mandatory"
+            return "Field is required"
         }
-        if (numberRegex.test(number)) {
+        if (number?.toString()?.length <= 9) {
             return "Please enter a valid phone number"
         }
     }
@@ -28,7 +27,7 @@ const ContactForm: React.FC<IContactFormProps> = () => {
     const validateEmail = (email: string) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!email) {
-            return "Mandatory"
+            return "Field is required"
         }
         if (!emailRegex.test(email)) {
             return "Please enter a valid email"
@@ -94,11 +93,9 @@ const ContactForm: React.FC<IContactFormProps> = () => {
                    setUploadedImage(file ? URL.createObjectURL(file) : undefined)
                }}
         />
-        {errors?.idPhoto &&
-            <span className="errorMessage">{errors.idPhoto.message as ReactNode}</span>}
 
         {uploadedImage &&
-            <img src={uploadedImage} alt="uploadedImage" style={{maxWidth: "200px"}}/>
+            <img src={uploadedImage} alt="uploadedImage" style={{maxWidth: "200px", filter: "drop-shadow(10px 8px 10px #B2B2B2)"}}/>
         }
         <br/>
     </div>
