@@ -28,6 +28,7 @@ const TextFieldRHF: React.FC<ITextFieldRHFProps> = (props) => {
                     helperText={fieldState.error?.message}
                     type={'text'}
                     disabled={disabled}
+                    sx={{ height: "50px", "& .MuiInputBase-root": { height: "60px" } }}
                     // We add * at the label if mandatory
                     label={label ? <>
                         {label}

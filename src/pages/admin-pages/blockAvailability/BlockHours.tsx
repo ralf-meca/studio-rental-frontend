@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import {enqueueSnackbar} from "notistack";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {getBlockedDatesAndHours} from "./block-availability.utils.ts";
+import {generateSelectedHours} from "../../../shared/shared.utils.ts";
 
 interface IBlockHoursProps {
 }
@@ -23,7 +24,9 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
     })
 
     const getBlockedDatesAndHoursList = () => {
+        console.log('methods?.watch("currentMonth")',methods?.watch("currentMonth"))
         getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+            console.log('value',value)
             methods?.setValue('blockedHoursAndDays', value)
         })
     }
@@ -35,33 +38,20 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
 
     const blockedHoursResponseObject = useMemo(() =>
             methods?.watch("blockedHoursAndDays")?.filter(el => el.date === methods?.watch("date"))?.[0]
-        , [methods?.watch("blockedHoursAndDays")])
+        , [methods?.watch("blockedHoursAndDays"), methods?.watch("date")])
+
 
     const isUnblockingHours = !!blockedHoursResponseObject?.hoursBlocked?.filter((el: string) => el === methods?.watch("startingHour"))?.[0]?.length
 
 
     const handleDisableHours: SubmitHandler<IRemoveHoursFormValues> = async (formValues: IRemoveHoursFormValues) => {
         // Gets the startingHour and endingHour and generates an array that holds all the hours inside that range
-        const generateSelectedHours = () => {
-            const blockedHours = [];
-
-            // Converting the hours in numbers to iterate through them.
-            let [startHour, startMinute] = formValues?.startingHour.split(":").map(Number);
-            const [endHour, endMinute] = formValues?.endingHour.split(":").map(Number);
-
-            // Iteration adds 0 on missing positions, ex. if we get startHour = 9, it fills the rest with 0 returning 09:00
-            while (startHour < endHour || (startHour === endHour && startMinute <= endMinute)) {
-                blockedHours.push(`${String(startHour).padStart(2, "0")}:${String(startMinute).padStart(2, "0")}`);
-                startHour++;
-            }
-
-            return blockedHours;
-        }
+        const blockedHours = generateSelectedHours(formValues?.startingHour, formValues?.endingHour)
 
         if (isUnblockingHours) {
 
             await axios.put(`/api/blocked-availability/remove-blocked-hours/${formValues.date}`, {
-                hoursToUnblock: generateSelectedHours()
+                hoursToUnblock: blockedHours
             }).then(async (value) => {
                 if (!value) {
                     return
@@ -74,7 +64,7 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
             // If admin is blocking the selected hours
             const payload = {
                 date: formValues.date,
-                hoursBlocked: generateSelectedHours(),
+                hoursBlocked: blockedHours,
                 isBlockedByAdmin: true,
                 isAllDayBlocked: false,
             }
@@ -82,7 +72,7 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
             // If blockedHours exist it means we are updating an existing object, so we use a different method
             if (!!blockedHoursResponseObject?.hoursBlocked) {
                 await axios.put(`/api/blocked-availability/add/${formValues?.date}`, {
-                    hoursBlocked: generateSelectedHours()
+                    hoursBlocked: blockedHours
                 }).then(async (value) => {
                     if (!value) {
                         return
@@ -103,6 +93,8 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
 
         }
     }
+
+    console.log('blockedHoursResponseObject',blockedHoursResponseObject)
 
     return <>
         <div className="row">

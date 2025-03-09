@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/shared-components/ProtectedRoute.tsx";
 
 const RouterWrapper = lazy(() => import('./routing/components/RouterWrapper.tsx'))
 const Home = lazy(() => import('./pages/home/Home.tsx'))
-const OrdersPage = lazy(() => import('./pages/admin-pages/orders/OrdersPage.tsx'))
+const OrdersPage = lazy(() => import('./pages/admin-pages/reservations/ReservationsPage.tsx'))
 const Dashboard = lazy(() => import('./pages/admin-pages/dashboard/Dashboard.tsx'))
 const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx'))
 const BlockDatesAndHours = lazy(() => import('./pages/admin-pages/blockAvailability/BlockAvailabilityPage.tsx'))
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
                 element: <ProtectedRoute/>, // Protect all admin routes
                 children: [
                     {path: "dashboard", element: <Dashboard/>},
-                    {path: "orders", element: <OrdersPage/>},
+                    {path: "reservations", element: <OrdersPage/>},
                     {path: "block-dates-and-hours", element: <BlockDatesAndHours/>},
                 ],
             },

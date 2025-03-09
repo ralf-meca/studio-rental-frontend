@@ -17,4 +17,5 @@ export interface IReservationFormValues {
     isConditionsAccepted: boolean
     currentMonth: string
     blockedHoursAndDays: any[]
+    totalPrice: number
 }

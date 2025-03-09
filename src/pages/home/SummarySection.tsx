@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "./reserve/reservation.consants.ts";
 import Typography from "@mui/material/Typography";
@@ -28,18 +28,25 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
     }, [methods])
 
     const totalPrice = useMemo(() => {
-        const lightsTotal = methods?.watch("selectedLights")?.reduce((previousVal, currentVal) => previousVal + currentVal.price * currentVal.quantity, 0)
+        const lightsTotal = methods?.watch("selectedLights")?.reduce(
+            (previousVal, currentVal) => previousVal + currentVal.price * currentVal.quantity * hoursReservedInTotal, 0)
 
         return hoursReservedInTotal * 10 + lightsTotal
     }, [methods])
+
+    // Set in the form context to use in other parts of the project
+    useEffect(() => {
+        methods.setValue("totalPrice", totalPrice)
+    }, [totalPrice])
+
 
     return <section className={`summary expanded-${isExpanded}`}>
         <div className="row justify-content-between mt-4">
             {/* See More / See Less Button */}
             <div className="d-flex justify-content-center">
-            <Link onClick={toggleContent} className="see-more-link">
-                {isExpanded ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
-            </Link>
+                <Link onClick={toggleContent} className="see-more-link">
+                    {isExpanded ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
+                </Link>
             </div>
             <div className="col-3">
                 <Typography fontSize={30}>Total</Typography>
@@ -72,8 +79,9 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
 
                         </div>
                         <div className="col-5 d-flex justify-content-end">
-                            <Typography fontSize={20}
-                                        fontWeight={200}>{light.quantity * light.price}.00 &#8364;</Typography>
+                            <Typography fontSize={20} fontWeight={200}>
+                                {light.quantity * light.price * hoursReservedInTotal}.00 &#8364;
+                            </Typography>
                         </div>
                     </div>
                 </>)}

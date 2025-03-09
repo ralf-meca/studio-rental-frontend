@@ -28,8 +28,8 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = ({isAdmin = false}) => {
 
         // We filter and return the hoursBlocked of the date selected, or return an empty array
         return methods?.watch("blockedHoursAndDays")?.filter(el => el?.date === methods?.watch("date"))?.[0]?.hoursBlocked
+            // Then we format the array we found  into ILabelValue[] type
             .map((el: string) => ({label: el, value: el})) ?? []
-
     }, [methods?.watch("date"), methods?.watch("blockedHoursAndDays")])
 
     // If the date is changed we clear the old values from the time selects

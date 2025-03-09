@@ -101,7 +101,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
     // If we pass closeLastStep as true from the parent component, it changes to the next step,
     // we need it only one time in the end when we click submit
     useEffect(() => {
-        console.log('closeLastStep',closeLastStep)
+        console.log('closeLastStep', closeLastStep)
         closeLastStep && setActiveStep((prevActiveStep) => prevActiveStep + 1)
     }, [closeLastStep])
 
@@ -112,7 +112,15 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
 
     const handleReset = () => {
         setActiveStep(0)
-        methods?.reset()
+        methods?.reset({
+            date: "",
+            currentMonth: dayjs().format("YYYY-MM"),
+            idPhoto: ''
+        })
+        // Refetch the data so the user will have the updated values if he resets the form.
+        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+            methods?.setValue('blockedHoursAndDays', value)
+        })
     }
 
     const ColorlibStepIcon = (props: StepIconProps) => {
@@ -136,13 +144,6 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
     const isDateAndHoursContinueButtonDisabled = useMemo(() =>
             !methods?.watch("date") || !methods?.watch("startingHour") || !methods?.watch("endingHour")
         , [methods?.watch("date"), methods?.watch("startingHour"), methods?.watch("endingHour")])
-
-    // Get the blocked dates and hours on page landing and everytime the month changes
-    useEffect(() => {
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
-            methods?.setValue('blockedHoursAndDays', value)
-        })
-    }, [methods?.watch("currentMonth")])
 
     return (
         <Box>
@@ -180,7 +181,8 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
                                     ? "Select date and the hours to continue" : ""
                             }>
                                     <span>
-                                        <button className="button-30" type="button" onClick={handleNext} style={{marginTop: 10}}
+                                        <button className="button-30" type="button" onClick={handleNext}
+                                                style={{marginTop: 10}}
                                                 disabled={isDateAndHoursContinueButtonDisabled}
                                         >
                                             Continue

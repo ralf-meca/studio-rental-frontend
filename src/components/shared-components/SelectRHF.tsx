@@ -12,6 +12,7 @@ import * as React from 'react'
 import {Controller, UseControllerProps} from 'react-hook-form'
 import {ILabelValueOption} from "../../shared/types.ts";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import {useEffect} from "react";
 
 interface ISelectRHFProps {
     label?: string
@@ -46,6 +47,12 @@ const SelectRHF: React.FC<ISelectRHFProps> = (props) => {
         disabledOptions,
         isAdmin= false
     } = props
+
+    useEffect(() => {
+        console.log('disabledOptions', disabledOptions)
+        console.log('options', options)
+    }, [disabledOptions])
+
 
     return (
         <Controller

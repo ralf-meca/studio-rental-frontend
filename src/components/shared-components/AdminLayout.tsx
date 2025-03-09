@@ -22,8 +22,9 @@ const NAVIGATION: Navigation = [
         kind: 'divider',
     },
     {
-        segment: 'orders',
-        title: 'Orders',
+        segment: 'reservations',
+        title: 'Reservations',
+        // action:
         icon: <ListAltIcon/>,
     },
     {

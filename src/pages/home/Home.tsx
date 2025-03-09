@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import "./../../index.css"
 import studioPhoto1 from "./../../assets/brand/studio-photo.jpeg"
 import studioPhoto2 from "./../../assets/brand/studio1.jpg"
@@ -14,6 +14,8 @@ import {IReservationFormValues} from "./reserve/reservation.consants.ts";
 import dayjs from "dayjs";
 import axios from "axios";
 import {enqueueSnackbar} from "notistack";
+import {generateSelectedHours} from "../../shared/shared.utils.ts";
+import {getBlockedDatesAndHours} from "../admin-pages/blockAvailability/block-availability.utils.ts";
 
 const Home: React.FC = () => {
     const [closeLastStep, setCloseLastStep] = useState<boolean>(false)
@@ -25,8 +27,17 @@ const Home: React.FC = () => {
         }
     })
 
+    // Get the blocked dates and hours on page landing and everytime the month changes
+    useEffect(() => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+            methods?.setValue('blockedHoursAndDays', value)
+        })
+    }, [methods?.watch("currentMonth")])
+
     const handleSubmitReservation: SubmitHandler<IReservationFormValues> = async (formValues: IReservationFormValues) => {
         setCloseLastStep(true)
+
+        const blockedHours = generateSelectedHours(formValues?.startingHour, formValues?.endingHour)
 
         const formData = new FormData();
         formData.append('date', formValues?.date)
@@ -37,6 +48,8 @@ const Home: React.FC = () => {
         formData.append('email', formValues?.email)
         formData.append('number', formValues?.number.toString())
         formData.append('idPhoto', formValues?.idPhoto?.[0])
+        formData.append('blockedHours', JSON.stringify(blockedHours)) // Stringify array data
+        formData.append('totalPrice', formValues?.totalPrice.toString())
 
         // Send the request
         axios.post('/api/reservations', formData, {
@@ -45,6 +58,11 @@ const Home: React.FC = () => {
             .then(() => {
                 setCloseLastStep(false) // reset state to false if user will do another reservation, it can work again
                 enqueueSnackbar("Booking request sent - you will be notified via email", {variant: 'success'})
+
+                // Call the service that returns the blocked dates and hours to update the values
+                getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+                    methods?.setValue('blockedHoursAndDays', value)
+                })
             })
             .catch(error => console.error('Error:', error))
     }
