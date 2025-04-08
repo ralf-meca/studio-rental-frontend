@@ -1,25 +1,33 @@
 import * as React from 'react'
+import {useEffect, useState} from 'react'
 import {DataGrid, GridCellParams, GridColDef, GridRowParams} from '@mui/x-data-grid';
 import dayjs from "dayjs";
 import ReservationDialog from "./ReservationDialog.tsx";
-import {useEffect, useState} from "react";
 import axios from "axios";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {Grid2, IconButton} from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {STATUS_COLOR_MAPPER, STATUS_COLOR_MAPPER_OLD, STATUS_MAPPER} from "./reservations.constants.ts";
 
 const ReservationsPage: React.FC = () => {
     const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [reservationList, setReservationList] = useState<any[]>([])
+    const [isReservationListLoading, setIsReservationListLoading] = useState<any>(null)
     const [selectedReservation, setSelectedReservation] = useState<any>(null)
+    const [monthSelected, setMonthSelected] = useState<string>(dayjs().format("YYYY-MM"))
 
-    // Get initial month reservations
+    // Get the list of the reservations everytime the month changes
     useEffect(() => {
-        getListData().then(() => undefined)
-    }, [])
+        setIsReservationListLoading(true)
+        getListData().then(() => setIsReservationListLoading(false))
+    }, [monthSelected])
 
-
-    const getListData = async (monthParam?: string) => {
-        const month = monthParam ?? dayjs().format("YYYY-MM")
+    const getListData = async () => {
         try {
-            const response = await axios.get(`/api/reservations/month/${month}`);
+            const response = await axios.get(`/api/reservations/month/${monthSelected}`);
             // We set the value from the response
             setReservationList(response.data.map((el: any) => ({
                 id: el?._id,
@@ -30,41 +38,14 @@ const ReservationsPage: React.FC = () => {
                 status: el?.status,
                 lightsSelected: el?.selectedLights,
                 email: el?.email,
-                number: el?.number
+                number: el?.number,
+                idPhoto: el?.idPhoto
             })) ?? [])
         } catch (error) {
-            console.error('Error fetching reservations for the month', month, error);
+            console.error('Error fetching reservations for the month', monthSelected, error);
         }
     }
 
-    // const mockedData = [
-    //     {id: 1, date: "2025-03-07", hours: ["06:00", "07:00", "08:00"], name: "Ralfi", total: 10, status: "pending"},
-    //     {id: 2, date: "2025-03-07", hours: ["09:00", "10:00", "11:00"], name: "Toni", total: 15, status: "pending"},
-    //     {id: 3, date: "2025-03-07", hours: ["12:00", "13:00", "14:00"], name: "Blerta", total: 20, status: "accepted"},
-    //     {id: 4, date: "2025-03-07", hours: ["15:00", "16:00", "17:00"], name: "Stela", total: 25, status: "pending"},
-    //     {id: 5, date: "2025-03-07", hours: ["15:00", "16:00", "17:00"], name: "Ana", total: 50, status: "refused"},
-    //     {id: 6, date: "2025-03-07", hours: ["15:00", "16:00", "17:00"], name: "Sara", total: 70, status: "refused"},
-    //     {id: 7, date: "2025-03-07", hours: ["15:00", "16:00", "17:00"], name: "Elisa", total: 20, status: "pending"},
-    //     {id: 8, date: "2025-03-07", hours: ["15:00", "16:00", "17:00"], name: "Geri", total: 30, status: "pending"},
-    //     {id: 9, date: "2025-04-07", hours: ["15:00", "16:00", "17:00"], name: "Beni", total: 25, status: "pending"},
-    //     {id: 10, date: "2025-04-07", hours: ["15:00", "16:00", "17:00"], name: "Liku", total: 25, status: "accepted"},
-    //     {id: 11, date: "2025-04-07", hours: ["15:00", "16:00", "17:00"], name: "Qazo", total: 25, status: "accepted"},
-    //     {id: 12, date: "2025-04-07", hours: ["15:00", "16:00", "17:00"], name: "Gezim", total: 25, status: "refused"},
-    // ]
-
-    const STATUS_MAPPER = {
-        "pending": "Pending",
-        "refused": "Refused",
-        "accepted": "Accepted"
-    }
-    const STATUS_COLOR_MAPPER = {
-        "refused": "rgba(253,92,99,0.63)",
-        "accepted": "#D0FFBC"
-    }
-    const STATUS_COLOR_MAPPER_OLD = {
-        "refused": "rgba(253,92,99,0.30)",
-        "accepted": "#d6f8c8"
-    }
     const isReservationOld = (params: GridRowParams | GridCellParams): string => {
         const rowData = params?.row ? params.row : params;
 
@@ -148,45 +129,72 @@ const ReservationsPage: React.FC = () => {
     ]
 
 
-    const handleClickOpenDialog = (params : GridCellParams) => {
+    const handleClickOpenDialog = (params: GridCellParams) => {
         const isOld = isReservationOld(params?.row)
         setSelectedReservation({...params?.row, isOld: !!isOld})
-        setOpenDialog(true);
+        setOpenDialog(true)
     };
 
     return <>
-        <DataGrid
-            columns={columns}
-            rows={reservationList}
-            pageSizeOptions={[5]}
-            initialState={{
-                pagination: {
-                    paginationModel: {
-                        pageSize: 5
-                    }
-                },
-            }}
-            hideFooterSelectedRowCount
-            sx={{
-                '.isOld': {
-                    // backgroundColor: '#afafaf',
-                    color: 'lightgray',
-                    '&:hover': {
-                        // backgroundColor: '#9b9b9b',
-                        color: 'lightgray'
-                    }
-                },
-                '.isOldAndIsStillPending': {
-                    backgroundColor: '#ffc1cc',
-                    '&:hover': {
-                        backgroundColor: '#d39fa9',
-                    }
-                }
-            }}
-            getRowClassName={params => isReservationOld(params)}
+        <Grid2 container>
+            <Grid2 size={12} marginBottom={3}>
+                <DataGrid
+                    columns={columns}
+                    rows={reservationList}
+                    loading={isReservationListLoading}
+                    pageSizeOptions={[5]}
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 5
+                            }
+                        },
+                    }}
+                    hideFooterSelectedRowCount
+                    sx={{
+                        '.isOld': {
+                            color: 'lightgray',
+                            '&:hover': {
+                                color: 'lightgray'
+                            }
+                        },
+                        '.isOldAndIsStillPending': {
+                            backgroundColor: '#ffc1cc',
+                            '&:hover': {
+                                backgroundColor: '#d39fa9',
+                            }
+                        }
+                    }}
+                    getRowClassName={params => isReservationOld(params)}
 
-        />
-        <button style={{position: "absolute", top: 100, left: "50%"}}>1</button>
+                />
+            </Grid2>
+            <Grid2 size={12} display={"flex"} justifyContent={"end"}>
+                <IconButton
+                    onClick={() => setMonthSelected(dayjs(monthSelected).subtract(1, "month").format("YYYY-MM"))}
+                    disabled={isReservationListLoading}
+                >
+                    <ArrowBackIosNewIcon/>
+                </IconButton>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        openTo="month"                     // Start the picker in month view
+                        views={['year', 'month']}          // Allow selection of year and month
+                        label="Zgjidh Muajin"
+                        value={dayjs(monthSelected)}
+                        disabled={isReservationListLoading}
+                        onChange={value => setMonthSelected(dayjs(value).format("YYYY-MM"))}
+                        orientation="portrait"
+
+                    />
+                </LocalizationProvider>
+                <IconButton
+                    onClick={() => setMonthSelected(dayjs(monthSelected).add(1, "month").format("YYYY-MM"))}
+                    disabled={isReservationListLoading}
+                >
+                    <ArrowForwardIosIcon/></IconButton>
+            </Grid2>
+        </Grid2>
         <ReservationDialog
             openDialog={openDialog}
             setOpenDialog={setOpenDialog}

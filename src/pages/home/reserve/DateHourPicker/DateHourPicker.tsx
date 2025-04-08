@@ -1,10 +1,10 @@
 import * as React from 'react'
 import {useEffect, useMemo, useState} from 'react'
 import {FormProvider, useFormContext} from "react-hook-form";
-import SelectRHF from "../../../../components/shared-components/SelectRHF.tsx";
+import SelectRHF from "../../../../components/shared-components/form/SelectRHF.tsx";
 import {FIELD_REQUIRED_DEFAULT_CONFIG} from "../../../../shared/shared.constants.ts";
 import {IReservationFormValues} from "../reservation.consants.ts";
-import DatePickerRHF from "../../../../components/shared-components/DatePickerRHF.tsx";
+import DatePickerRHF from "../../../../components/shared-components/form/DatePickerRHF.tsx";
 import {endingHoursListNormalizer, startingHoursListNormalizer} from "./date-hour-picker.utils.ts";
 import {ILabelValueOption} from "../../../../shared/types.ts";
 import {Tooltip} from "@mui/material";

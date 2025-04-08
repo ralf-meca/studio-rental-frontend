@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {ReactNode} from 'react';
 import {extendTheme} from '@mui/material/styles';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import BlockIcon from '@mui/icons-material/Block';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {AppProvider, Navigation} from '@toolpad/core/AppProvider';
@@ -9,28 +8,25 @@ import {DashboardLayout} from '@toolpad/core/DashboardLayout';
 import {PageContainer} from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import VisualMindsIcon from './../../assets/brand/visual-minds-logo-black.png'
 import {useLocation, useNavigate} from "react-router-dom";
 
 const NAVIGATION: Navigation = [
     {
-        segment: 'dashboard',
-        title: 'Dashboard',
-        icon: <DashboardIcon/>,
-    },
-    {
-        kind: 'divider',
-    },
-    {
         segment: 'reservations',
         title: 'Reservations',
-        // action:
         icon: <ListAltIcon/>,
     },
     {
         segment: 'block-dates-and-hours',
         title: 'Block dates and hours',
         icon: <BlockIcon/>,
+    },
+    {
+        segment: 'lights-rentals',
+        title: 'Lights Rentals',
+        icon: <EmojiObjectsOutlinedIcon/>,
     },
     {
         kind: 'divider',
@@ -64,18 +60,12 @@ const customTheme = extendTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 ul: {
-                    height: '100vh',
                     margin: 0,
                     padding: 0,
                     listStyle: 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     position: 'relative',
-                },
-                'ul li:last-child': {
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
                 },
             },
         },

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Dispatch, SetStateAction, useState} from 'react'
+import {Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {
     Dialog,
     DialogActions,
@@ -19,9 +19,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Typography from "@mui/material/Typography";
 import {useForm} from "react-hook-form";
-import SelectRHF from "../../../components/shared-components/SelectRHF.tsx";
+import SelectRHF from "../../../components/shared-components/form/SelectRHF.tsx";
 import {ILabelValueOption} from "../../../shared/types.ts";
-import TextFieldRHF from "../../../components/shared-components/TextFieldRHF.tsx";
+import TextFieldRHF from "../../../components/shared-components/form/TextFieldRHF.tsx";
+import axios from "axios";
+import {enqueueSnackbar} from "notistack";
 
 interface IOrderDialogProps {
     openDialog: boolean
@@ -31,23 +33,42 @@ interface IOrderDialogProps {
 }
 
 const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialog, callBackFunction, reservation}) => {
-    const handleConfirm = () => {
-        callBackFunction()
-        setOpenDialog(false);
-    }
+    const [isLightSectionExpanded, setIsLightSectionExpanded] = useState(false)
+    const [isIDVisible, setIsIDVisible] = useState(false)
+    const methods = useForm<{ status: string, doorCode: number }>()
 
-    const methods = useForm<{ status: string, doorCode: number }>({
-        defaultValues: {
+    // Sets the initial form values
+    useEffect(() => {
+        methods?.reset({
             status: reservation?.status,
             doorCode: reservation?.doorCode
-        }
-    })
+        })
+    }, [reservation])
 
-    const [isExpanded, setIsExpanded] = useState(false);
-    const toggleContent = () => {
-        setIsExpanded(!isExpanded);
+    const handleConfirm = async () => {
+        const status = methods?.watch("status")
+        await axios.patch(`/api/reservations/${reservation?.id}`, {
+            status: status,
+            doorCode: methods?.watch("doorCode"),
+        }).then(() => {
+            callBackFunction()
+            setOpenDialog(false);
+
+            // Depending on the status in the end we show the following messages
+            status === "accepted" && enqueueSnackbar("Kerkesa u pranua", {variant: 'success'})
+
+            status === "refused" && enqueueSnackbar("Kerkesa u refuzua", {variant: 'error'})
+
+            status === "pending" && enqueueSnackbar("Kerkesa u riktye ne 'Pending'", {variant: 'info'})
+        })
+    }
+
+    const toggleContentLightSection = () => {
+        setIsLightSectionExpanded(!isLightSectionExpanded);
     };
-    console.log('reservation', reservation)
+    const toggleContentIDSection = () => {
+        setIsIDVisible(!isIDVisible);
+    }
 
     const SELECT_OPTIONS: ILabelValueOption[] = [
         {label: "Pending", value: "pending"},
@@ -63,7 +84,6 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
             Detajet e rezervimit
         </DialogTitle>
         <DialogContent>
-            Rezervuesi:
             <TableContainer component={Paper}
                             sx={{minWidth: "100%", maxHeight: 500, overflow: "auto", marginBottom: 3}}>
                 <Table aria-label="simple table">
@@ -83,6 +103,21 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            {/* See More / See Less Button */}
+            <div className="">
+                <Link onClick={toggleContentIDSection} className="see-more-link d-flex">
+                    <Typography fontWeight={600} marginBottom={2}>
+                        {isIDVisible ? "Fshih" : "Shiko"} Karten e ID
+                    </Typography>
+                    {isIDVisible ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+
+                </Link>
+
+                {isIDVisible &&
+                    <img src={`http://localhost:3001/${reservation.idPhoto}`} alt="idPhoto" width={500}/>
+                }
+            </div>
             <TableContainer component={Paper}
                             sx={{minWidth: "100%", maxHeight: 500, overflow: "auto", marginBottom: 3}}>
                 <Table aria-label="simple table">
@@ -118,8 +153,8 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                         <TableCell>
                             {/* See More / See Less Button */}
                             <div className="d-flex justify-content-center">
-                                <Link onClick={toggleContent} className="see-more-link">
-                                    {isExpanded ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
+                                <Link onClick={toggleContentLightSection} className="see-more-link">
+                                    {isLightSectionExpanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                                 </Link>
                             </div>
                         </TableCell>
@@ -127,7 +162,7 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                 </TableBody>
             </Table>
             {/* Lights Detailed Table */}
-            {isExpanded &&
+            {isLightSectionExpanded &&
                 <TableContainer component={Paper} sx={{minWidth: "100%", maxHeight: 500, overflow: "auto"}}>
                     <Table aria-label="simple table">
                         <TableBody>
@@ -167,7 +202,7 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                 </TableBody>
             </Table>
 
-            <div className="row">
+            <div className="row mt-4">
                 <div className="col-6">
                     <SelectRHF
                         label="Statusi"
@@ -204,9 +239,10 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
             <Button onClick={() => setOpenDialog(false)}>
                 Anullo
             </Button>
-            <Button onClick={handleConfirm} variant="contained" loading={false} disabled={reservation?.isOld}>
+            <button onClick={handleConfirm} className="button-30 mx-4 mb-2"
+                    disabled={reservation?.isOld || methods?.watch("status") === "pending"}>
                 Konfirmo zgjedhjen
-            </Button>
+            </button>
 
         </DialogActions>
     </Dialog>

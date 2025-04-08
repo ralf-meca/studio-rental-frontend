@@ -20,7 +20,7 @@ import LightsReservation from "./lightsReservation/LightsReservation.tsx";
 import ContactForm from "./contactForm/ContactForm.tsx";
 import Rules from "./Rules.tsx";
 import RuleIcon from '@mui/icons-material/Rule';
-import CheckboxRHF from "../../../components/CheckBoxRHF.tsx";
+import CheckboxRHF from "../../../components/shared-components/form/CheckBoxRHF.tsx";
 import dayjs from "dayjs";
 import {getBlockedDatesAndHours} from "../../admin-pages/blockAvailability/block-availability.utils.ts";
 

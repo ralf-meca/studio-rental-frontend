@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useState} from 'react'
 import {Controller, useFormContext} from "react-hook-form";
 import {IReservationFormValues} from "../reservation.consants.ts";
-import TextFieldRHF from "../../../../components/shared-components/TextFieldRHF.tsx";
+import TextFieldRHF from "../../../../components/shared-components/form/TextFieldRHF.tsx";
 import {FIELD_REQUIRED_DEFAULT_CONFIG} from "../../../../shared/shared.constants.ts";
 import {TextField} from "@mui/material";
 

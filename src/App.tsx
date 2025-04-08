@@ -5,20 +5,22 @@ import {Button} from '@mui/material'
 import SuspenseFallback from "./routing/components/SuspenseFallback.tsx";
 import {closeSnackbar, SnackbarProvider} from 'notistack'
 import ProtectedRoute from "./components/shared-components/ProtectedRoute.tsx";
+import ErrorPage from "./routing/components/ErrorPage/ErrorPage.tsx";
 
 const RouterWrapper = lazy(() => import('./routing/components/RouterWrapper.tsx'))
 const Home = lazy(() => import('./pages/home/Home.tsx'))
 const OrdersPage = lazy(() => import('./pages/admin-pages/reservations/ReservationsPage.tsx'))
-const Dashboard = lazy(() => import('./pages/admin-pages/dashboard/Dashboard.tsx'))
 const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx'))
-const BlockDatesAndHours = lazy(() => import('./pages/admin-pages/blockAvailability/BlockAvailabilityPage.tsx'))
+const BlockAvailabilityPage = lazy(() => import('./pages/admin-pages/blockAvailability/BlockAvailabilityPage.tsx'))
+const LightsRentals = lazy(() => import('./pages/admin-pages/lights-rentals/LightRentals.tsx'))
 
 const router = createBrowserRouter([
+    {path: "*", element: <ErrorPage/>},
     {
         element: <RouterWrapper isAdmin={false}/>,
         children: [
             {path: "/", element: <Home/>},
-            {path: "admin/login", element: <AdminLogin/>} // using the normal RouterWrapper
+            {path: "admin/login", element: <AdminLogin/>}, // using the normal RouterWrapper
         ],
     },
     {
@@ -28,9 +30,10 @@ const router = createBrowserRouter([
                 path: "admin",
                 element: <ProtectedRoute/>, // Protect all admin routes
                 children: [
-                    {path: "dashboard", element: <Dashboard/>},
+                    // {path: "dashboard", element: <Dashboard/>},
                     {path: "reservations", element: <OrdersPage/>},
-                    {path: "block-dates-and-hours", element: <BlockDatesAndHours/>},
+                    {path: "block-dates-and-hours", element: <BlockAvailabilityPage/>},
+                    {path: "lights-rentals", element: <LightsRentals/>},
                 ],
             },
         ],
@@ -45,7 +48,7 @@ function App() {
             anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
             action={(snackbarId) => (
                 <Button style={{color: 'white'}} onClick={() => closeSnackbar(snackbarId)}>
-                    Mbyll
+                    Close
                 </Button>
             )}
         >

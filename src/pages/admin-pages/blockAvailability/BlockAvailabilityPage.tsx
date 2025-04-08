@@ -35,7 +35,7 @@ function a11yProps(index: number) {
     };
 }
 
-export default function BasicTabs() {
+const BlockAvailabilityPage = () => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -63,3 +63,5 @@ export default function BasicTabs() {
         </Box>
     );
 }
+
+export default BlockAvailabilityPage

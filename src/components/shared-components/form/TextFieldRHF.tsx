@@ -8,12 +8,13 @@ interface ITextFieldRHFProps extends InputBaseProps {
     placeHolder?: string
     fieldProps?: any
     controllerProps: UseControllerProps<any>
+    multiline?: boolean
     className?: string
 }
 
 const TextFieldRHF: React.FC<ITextFieldRHFProps> = (props) => {
 
-    const {label = '', fieldProps, controllerProps, disabled = false, className = ''} = props
+    const {label = '', fieldProps, controllerProps, disabled = false, className = '', multiline = false} = props
 
     return <div className={className}>
         <Controller
@@ -26,6 +27,8 @@ const TextFieldRHF: React.FC<ITextFieldRHFProps> = (props) => {
                     fullWidth
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
+                    multiline={multiline}
+                    maxRows={2}
                     type={'text'}
                     disabled={disabled}
                     sx={{ height: "50px", "& .MuiInputBase-root": { height: "60px" } }}
