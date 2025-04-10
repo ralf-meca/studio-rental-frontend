@@ -194,4 +194,7 @@ li::marker{
     .summary.expanded-false > div > hr {
         display: none;
     }
+    #details-and-reserve{
+        margin-bottom: 100px;
+    }
 }

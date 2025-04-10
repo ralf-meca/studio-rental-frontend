@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Dispatch, SetStateAction, useEffect, useState} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {
     Dialog,
     DialogActions,
@@ -76,6 +76,15 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
         {label: "Pranuar", value: "accepted"},
     ]
 
+    const hoursReservedInTotal = useMemo(() => {
+        // Here we format the hours into a date format to use build in date-fns function to compare them
+        const startingHour = dayjs(reservation?.hours[0], "HH:mm")
+        const endingHour = dayjs(reservation?.hours[reservation?.hours?.length - 1], "HH:mm")
+
+        // Get the difference in minutes, then convert to hours
+        return endingHour.diff(startingHour, "hour")
+    }, [reservation])
+
     return <Dialog open={openDialog}
                    onClose={() => setOpenDialog(false)}
                    maxWidth="md"
@@ -136,7 +145,7 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                         </TableRow>
                         <TableRow>
                             <TableCell>Totali nga oret:</TableCell>
-                            <TableCell>{reservation?.hours.length * 10}.00 &#8364;</TableCell>
+                            <TableCell>{hoursReservedInTotal * 10}.00 &#8364;</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -148,15 +157,17 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
                             Totali nga pajisjet
                         </TableCell>
                         <TableCell>
-                            {reservation?.total - reservation?.hours.length * 10}.00 &#8364;
+                            {reservation?.total - (hoursReservedInTotal * 10)}.00 &#8364;
                         </TableCell>
                         <TableCell>
                             {/* See More / See Less Button */}
-                            <div className="d-flex justify-content-center">
-                                <Link onClick={toggleContentLightSection} className="see-more-link">
-                                    {isLightSectionExpanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-                                </Link>
-                            </div>
+                            {!!reservation?.lightsSelected.length &&
+                                <div className="d-flex justify-content-center">
+                                    <Link onClick={toggleContentLightSection} className="see-more-link">
+                                        {isLightSectionExpanded ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                                    </Link>
+                                </div>
+                            }
                         </TableCell>
                     </TableRow>
                 </TableBody>

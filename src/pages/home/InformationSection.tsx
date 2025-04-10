@@ -9,6 +9,7 @@ import ChairOutlinedIcon from '@mui/icons-material/ChairOutlined';
 import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import {useGetRentalsListData} from "../../shared/useGetRentalsListData.ts";
 
 interface IInformationSectionProps {
 }
@@ -34,72 +35,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
         "Spotlights",
     ]
 
-    const mockedDataLights = [
-        {
-            id: 1,
-            name: "Led 300 W Godox SL300 II",
-            price: 5,
-            quantity: 1,
-            img: "https://studio.visualminds.al/lights/1.jpeg",
-            description: "A daylight-balanced 300W LED monolight suitable for video production, live streaming, and photography. Offers dimmable brightness and high color accuracy."
-        },
-        {
-            id: 2,
-            name: "Nanlite PavoTube LED Tubes",
-            price: 5,
-            quantity: 4,
-            img: "https://studio.visualminds.al/lights/2.jpeg",
-            description: "Versatile LED tube lights with adjustable color temperature and special effects, ideal for creative lighting setups in film and photography."
-        },
-        {
-            id: 3,
-            name: "40 W Zhiyun M40",
-            price: 5,
-            quantity: 2,
-            img: "https://studio.visualminds.al/lights/3.jpeg",
-            description: "A compact 40W pocket LED light with high brightness and excellent color rendering, perfect for mobile content creation and on-the-go shooting."
-        },
-        {
-            id: 4,
-            name: "100 W Zhiyun F100",
-            price: 5,
-            quantity: 2,
-            img: "https://studio.visualminds.al/lights/4.jpeg",
-            description: "A 100W LED light stick offering adjustable color temperature and high output, designed for versatile lighting needs in video and photography."
-        },
-        {
-            id: 5,
-            name: "Led 200 W Godox FV200",
-            price: 5,
-            quantity: 1,
-            img: "https://studio.visualminds.al/lights/5.jpeg",
-            description: "A hybrid 200W LED light that functions as both a continuous light and a high-speed sync flash, making it ideal for video and photography applications."
-        },
-        {
-            id: 6,
-            name: "Led 150 W Godox FV150",
-            price: 5,
-            quantity: 1,
-            img: "https://studio.visualminds.al/lights/6.jpeg",
-            description: "A 150W LED light with continuous and high-speed sync flash capabilities, providing flexibility for both videography and photography needs."
-        },
-        {
-            id: 7,
-            name: "Led 150 W Godox SL150 II",
-            price: 5,
-            quantity: 1,
-            img: "https://studio.visualminds.al/lights/7.jpeg",
-            description: "A daylight-balanced 150W LED light known for its high color accuracy and silent cooling mode, making it great for professional video production."
-        },
-        {
-            id: 8,
-            name: "Strobe 600 W Godox AD600BM",
-            price: 5,
-            quantity: 1,
-            img: "https://studio.visualminds.al/lights/8.jpeg",
-            description: "A 600W portable strobe light with high-speed sync and battery-powered operation, perfect for both studio and outdoor photography."
-        }
-    ];
+    const {rentalList} = useGetRentalsListData(true)
 
     return <>
         {/* Title */}
@@ -264,25 +200,25 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
         {/* Lights */}
         <section>
             <Typography fontSize={20} fontWeight={600} className="mt-4">Rentable Lights</Typography>
-            {mockedDataLights?.map((light) => <div key={light.name}>
+            {rentalList?.map((rental) => <div key={rental.name}>
                 <div className="row mt-4">
                     <div className="col-3 d-flex justify-content-center">
-                        <img src={light?.img} alt={light?.name} width={80} height="fit-content"/>
+                        <img src={`http://localhost:3001${rental?.image}`} alt={rental?.name} width={80} height="fit-content"/>
                     </div>
                     <div className="col-6">
                         <div className="row">
                             <div className="col-12">
-                                <Typography fontSize={15} fontWeight={600}>{light?.name}</Typography>
+                                <Typography fontSize={15} fontWeight={600}>{rental?.name}</Typography>
                             </div>
                             <div className="col-12">
-                                <p style={{fontSize: 12, fontWeight: 400}}>{light?.description}</p>
+                                <p style={{fontSize: 12, fontWeight: 400}}>{rental?.description}</p>
                             </div>
                         </div>
                     </div>
                     <div className="col-2">
                         <div className="row light-price">
                             <div className="col-12">
-                                <Typography fontSize={20} fontWeight={600}>{light?.price}.00 &#8364;</Typography>
+                                <Typography fontSize={20} fontWeight={600}>{rental?.price}.00 &#8364;</Typography>
                             </div>
                             <div className="col-12">
                                 per hour
@@ -305,7 +241,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
                     src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-                &q=Studio+Visual+Minds,Tiranë,Albania`}>
+                &q=Visual+Minds+Studio,Tiranë,Albania`}>
                 </iframe>
             </div>
         </section>

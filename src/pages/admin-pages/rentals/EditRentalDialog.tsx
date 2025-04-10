@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Dispatch, SetStateAction, useEffect} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material'
 import Button from "@mui/material/Button";
 import {FormProvider, SubmitHandler, useForm} from "react-hook-form";
@@ -26,26 +26,37 @@ const EditRentalDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialo
             formData.append("quantity", formValues.quantity.toString())
             formData.append("status", formValues.status)
 
+
             // Append new image only if provided
-            if (formValues.img && formValues.img.length > 0) {
-                formData.append("img", formValues.img[0])
+            if (formValues.image && formValues.image.length > 0) {
+                formData.append("img", formValues.image[0])
             }
 
-            await axios.patch(`/api/rentals/${rental?.id}`, formData,{
+            await axios.put(`/api/rentals/${rental?.id}`, formData,{
                 headers: {'Content-Type': 'multipart/form-data'}
             }).then(() => {
-                enqueueSnackbar("Pajisja e re u shtua me sukses", {variant: 'success'})
+                enqueueSnackbar("Pajisja u modifikua me sukses", {variant: 'success'})
+                setOpenDialog(false)
             })
 
         } catch (error) {
             console.error("Error updating rental:", error);
         }
         await callBackFunction()
+        methods?.reset()
     }
 
+    // Clear form values everytime dialog is closed, or another rental dialog is opened.
     useEffect(() => {
         methods?.reset(rental)
-    }, [rental])
+    }, [rental?.id, openDialog])
+
+    // If the image in the formValues is a string it's returned from the BE and we need to locate it in port 3001, otherwise locate it in the FileList
+    const imageSrc = useMemo(()=> {
+        return typeof methods?.watch("image") === "string"
+            ? `http://localhost:3001${methods?.watch("image")}`
+            : !!methods?.watch("image") ? URL.createObjectURL(methods?.watch("image")?.[0]) : ''
+    },[methods?.watch("image")])
 
     return <Dialog open={openDialog}
                    onClose={() => setOpenDialog(false)}
@@ -59,8 +70,8 @@ const EditRentalDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialo
             <DialogContent>
 
                 <div className="row d-flex justify-content-center">
-                    {!!methods?.watch("img") &&
-                        <img src={methods?.watch("img")} alt="uploadedImage"
+                    {!!imageSrc &&
+                        <img src={imageSrc} alt="uploadedImage"
                              style={{maxWidth: "250px", filter: "drop-shadow(10px 8px 10px #B2B2B2)"}}/>
                     }
                 </div>

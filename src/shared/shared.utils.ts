@@ -1,4 +1,4 @@
-export const generateSelectedHours = (startingHour:string, endingHour: string) => {
+export const generateSelectedHours = (startingHour: string, endingHour: string) => {
     const blockedHours = [];
 
     // Converting the hours in numbers to iterate through them.

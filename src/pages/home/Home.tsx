@@ -23,7 +23,8 @@ const Home: React.FC = () => {
         defaultValues: {
             date: "",
             currentMonth: dayjs().format("YYYY-MM"),
-            idPhoto: ''
+            idPhoto: "",
+            name: ""
         }
     })
 

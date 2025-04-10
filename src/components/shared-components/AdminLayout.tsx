@@ -15,17 +15,17 @@ import {useLocation, useNavigate} from "react-router-dom";
 const NAVIGATION: Navigation = [
     {
         segment: 'reservations',
-        title: 'Reservations',
+        title: 'Rezervime',
         icon: <ListAltIcon/>,
     },
     {
         segment: 'block-dates-and-hours',
-        title: 'Block dates and hours',
+        title: 'Blloko data dhe ore',
         icon: <BlockIcon/>,
     },
     {
-        segment: 'lights-rentals',
-        title: 'Lights Rentals',
+        segment: 'rentals',
+        title: 'Pajisjet me qera',
         icon: <EmojiObjectsOutlinedIcon/>,
     },
     {
@@ -86,7 +86,7 @@ const AdminLayout: React.FC<IAdminLayoutProps> = ({children}) => {
             branding={{
                 logo: <img src={VisualMindsIcon} alt="visual minds black logo"/>,
                 title: 'Visual Minds Studio',
-                homeUrl: '/admin',
+                homeUrl: '/',
             }}
             router={{
                 pathname: `/${pathname.split("/")[2]}`,

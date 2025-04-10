@@ -16,7 +16,7 @@ const RentalFormFields: React.FC<IRentalFormFieldsProps> = () => {
         {/* Image upload */}
         <div className="row d-flex justify-content-center">
             <div className="col-6 mt-4">
-                <input {...methods?.register("img")}
+                <input {...methods?.register("image")}
                        className="form-control mb-4" type="file" accept="image/*"
                 />
             </div>

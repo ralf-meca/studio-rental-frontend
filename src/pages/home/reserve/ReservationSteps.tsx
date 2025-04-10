@@ -41,14 +41,14 @@ const ColorlibStepIconRoot = styled('div')<{ ownerState: { completed?: boolean, 
         {
             props: ({ownerState}) => ownerState.active,
             style: {
-                backgroundImage: 'linear-gradient(90deg, rgba(25,118,210,1) 100%, rgba(25,118,210,1) 100%)',
+                backgroundImage: 'linear-gradient(90deg, rgba(0,36,71,1) 0%, rgba(0,36,71,1) 100%)',
                 boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
             },
         },
         {
             props: ({ownerState}) => ownerState.completed,
             style: {
-                backgroundImage: 'linear-gradient(90deg, rgba(25,118,210,1) 100%, rgba(25,118,210,1) 100%)'
+                backgroundImage: 'linear-gradient(90deg, rgba(0,36,71,1) 0%, rgba(0,36,71,1) 100%)',
             },
         },
     ],
@@ -60,14 +60,14 @@ const ColorlibConnector = styled(StepConnector)(({theme}) => ({
     },
     [`&.${stepConnectorClasses.active}`]: {
         [`& .${stepConnectorClasses.line}`]: {
-            backgroundImage: 'linear-gradient(90deg, rgba(25,118,210,1) 100%, rgba(25,118,210,1) 100%)',
+            backgroundImage: 'linear-gradient(90deg, rgba(0,36,71,1) 0%, rgba(0,36,71,1) 100%)',
             width: 2,
             marginLeft: 2,
         },
     },
     [`&.${stepConnectorClasses.completed}`]: {
         [`& .${stepConnectorClasses.line}`]: {
-            backgroundImage: 'linear-gradient(90deg, rgba(25,118,210,1) 100%, rgba(25,118,210,1) 100%)',
+            backgroundImage: 'linear-gradient(90deg, rgba(0,36,71,1) 0%, rgba(0,36,71,1) 100%)',
             width: 2,
             marginLeft: 2,
         },
@@ -101,7 +101,6 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
     // If we pass closeLastStep as true from the parent component, it changes to the next step,
     // we need it only one time in the end when we click submit
     useEffect(() => {
-        console.log('closeLastStep', closeLastStep)
         closeLastStep && setActiveStep((prevActiveStep) => prevActiveStep + 1)
     }, [closeLastStep])
 
@@ -127,10 +126,10 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
         const {active, completed, className} = props
 
         const icons: { [index: string]: React.ReactElement } = {
-            1: <CalendarMonthOutlinedIcon/>,
-            2: <LightbulbOutlinedIcon/>,
-            3: <RuleIcon/>,
-            4: <FeedOutlinedIcon/>,
+            1: <CalendarMonthOutlinedIcon fontSize={"small"} />,
+            2: <LightbulbOutlinedIcon fontSize={"small"}/>,
+            3: <RuleIcon fontSize={"small"}/>,
+            4: <FeedOutlinedIcon fontSize={"small"}/>,
         }
 
         return (

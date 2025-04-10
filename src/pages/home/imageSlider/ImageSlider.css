@@ -13,7 +13,7 @@
 
 .slide img {
     width: 100%;
-    height: 50vh;
+    height: 80vh;
     object-fit: cover;
     display: block;
 }
@@ -41,4 +41,10 @@
 
 .slick-dots li button:before {
     color: white;
+}
+
+@media only screen and (max-width: 600px) {
+    .slide img {
+        height: 50vh;
+    }
 }

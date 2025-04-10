@@ -47,7 +47,9 @@ const DateHourPicker: React.FC<IDateHourPickerProps> = ({isAdmin = false}) => {
     useEffect(() => {
         methods?.setValue("endingHour", "")
         setEndingHoursToDisplay(endingHoursListNormalizer(methods?.watch(), isAdmin))
+
     }, [methods?.watch("startingHour")])
+
 
     return <>
         <div className="col-12 mb-4">

@@ -1,6 +1,7 @@
 export interface ILight {
     id: number;
     name: string;
+    image: string;
     quantity: number;
     price: number;
 }

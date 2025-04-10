@@ -24,9 +24,7 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
     })
 
     const getBlockedDatesAndHoursList = () => {
-        console.log('methods?.watch("currentMonth")',methods?.watch("currentMonth"))
         getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
-            console.log('value',value)
             methods?.setValue('blockedHoursAndDays', value)
         })
     }
@@ -93,8 +91,6 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
 
         }
     }
-
-    console.log('blockedHoursResponseObject',blockedHoursResponseObject)
 
     return <>
         <div className="row">

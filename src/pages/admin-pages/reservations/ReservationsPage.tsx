@@ -142,11 +142,11 @@ const ReservationsPage: React.FC = () => {
                     columns={columns}
                     rows={reservationList}
                     loading={isReservationListLoading}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[10]}
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 5
+                                pageSize: 10
                             }
                         },
                     }}

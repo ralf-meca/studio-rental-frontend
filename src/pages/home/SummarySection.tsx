@@ -67,24 +67,24 @@ const SummarySection: React.FC<ISummarySectionProps> = () => {
                     </div>
                 </div>
                 <Divider sx={{bgcolor: "secondary.light"}}/>
-                {methods?.watch("selectedLights")?.map(light => <>
-                    <div className="row justify-content-between  mt-2" key={light.name}>
+                {methods?.watch("selectedLights")?.map(rental =>
+                    <div className="row justify-content-between  mt-2" key={rental?.id}>
                         <div className="col-7">
                             <Typography fontSize={15} fontWeight={150}>
-                                {light.name}
+                                {rental?.name}
                             </Typography>
                             <Typography fontSize={12} fontWeight={100}>
-                                x {light.quantity}
+                                x {rental?.quantity}
                             </Typography>
 
                         </div>
                         <div className="col-5 d-flex justify-content-end">
                             <Typography fontSize={20} fontWeight={200}>
-                                {light.quantity * light.price * hoursReservedInTotal}.00 &#8364;
+                                {rental.quantity * rental.price * hoursReservedInTotal}.00 &#8364;
                             </Typography>
                         </div>
                     </div>
-                </>)}
+                )}
             </div>
         </div>
     </section>

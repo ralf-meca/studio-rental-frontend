@@ -12,7 +12,7 @@ const Home = lazy(() => import('./pages/home/Home.tsx'))
 const OrdersPage = lazy(() => import('./pages/admin-pages/reservations/ReservationsPage.tsx'))
 const AdminLogin = lazy(() => import('./pages/admin-pages/login/AdminLogin.tsx'))
 const BlockAvailabilityPage = lazy(() => import('./pages/admin-pages/blockAvailability/BlockAvailabilityPage.tsx'))
-const LightsRentals = lazy(() => import('./pages/admin-pages/lights-rentals/LightRentals.tsx'))
+const LightsRentals = lazy(() => import('./pages/admin-pages/rentals/RentalsPage.tsx'))
 
 const router = createBrowserRouter([
     {path: "*", element: <ErrorPage/>},
@@ -30,10 +30,9 @@ const router = createBrowserRouter([
                 path: "admin",
                 element: <ProtectedRoute/>, // Protect all admin routes
                 children: [
-                    // {path: "dashboard", element: <Dashboard/>},
                     {path: "reservations", element: <OrdersPage/>},
                     {path: "block-dates-and-hours", element: <BlockAvailabilityPage/>},
-                    {path: "lights-rentals", element: <LightsRentals/>},
+                    {path: "rentals", element: <LightsRentals/>},
                 ],
             },
         ],

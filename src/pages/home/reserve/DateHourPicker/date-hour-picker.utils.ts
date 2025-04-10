@@ -31,12 +31,18 @@ export const endingHoursListNormalizer = (formValues: IReservationFormValues, is
 
     const blockedHours = formValues?.blockedHoursAndDays?.filter(el => el.date === formValues?.date)?.[0]?.hoursBlocked
     const blockedHoursFormatted = blockedHours?.map((el: string) => ({label: el, value: el}))
+        .sort((a: ILabelValueOption, b: ILabelValueOption) => {
+            return a.value.localeCompare(b.value)
+        })
+
+
+    const nextBlockedHour = blockedHours?.filter((hour: string) => hour > formValues?.startingHour)[0]
+    const endingIndex = OPEN_HOUR_LIST?.findIndex(item => item.value === nextBlockedHour)
 
     // Find the index of the selected starting hour in blockedHoursFormatted
-    const startingIndexBlockedHours = blockedHoursFormatted?.findIndex((item: ILabelValueOption) => item.value === formValues?.startingHour)
+    const startingIndexBlockedHours = blockedHoursFormatted?.findIndex((item: ILabelValueOption) => item?.value === formValues?.startingHour)
 
     const isUnblockingHours = !!blockedHours?.filter((el: string) => el === formValues?.startingHour)?.[0]?.length
-
 
     // We return the remaining hours skipping the selected hour and one more hour
     // (so if startingHour is 09:00, the endingHour list starts with 11:00) ,
@@ -44,8 +50,8 @@ export const endingHoursListNormalizer = (formValues: IReservationFormValues, is
     if (isAdmin) {
         // Admin can block/unblock hours, if unblocking, show only the hours that he can unblock
         if (isUnblockingHours) {
-            return startingIndexBlockedHours >= 0 && startingIndexBlockedHours < blockedHoursFormatted.length
-                ? blockedHoursFormatted.slice(startingIndexBlockedHours)
+            return startingIndexBlockedHours >= 0 && startingIndexBlockedHours < blockedHoursFormatted?.length
+                ? blockedHoursFormatted?.slice(startingIndexBlockedHours)
                 : [] // Return empty if no valid hour can be selected
         } else {
             return startingIndex >= 0 && startingIndex < OPEN_HOUR_LIST?.length
@@ -54,7 +60,7 @@ export const endingHoursListNormalizer = (formValues: IReservationFormValues, is
         }
     } else {
         return startingIndex >= 0 && startingIndex + 2 < OPEN_HOUR_LIST?.length
-            ? OPEN_HOUR_LIST?.slice(startingIndex + 2) // Skip one and show the next one
+            ? OPEN_HOUR_LIST?.slice(startingIndex + 2, endingIndex) // Skip one and show the next one
             : [] // Return empty if no valid hour can be selected after skipping
     }
 }

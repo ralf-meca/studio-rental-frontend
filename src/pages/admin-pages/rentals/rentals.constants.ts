@@ -2,7 +2,7 @@ import {ILabelValueOption} from "../../../shared/types.ts";
 
 export interface IRentalFormValues {
     id: string
-    img: string
+    image: any
     name: string
     description: string
     price: number
