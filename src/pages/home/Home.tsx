@@ -30,7 +30,7 @@ const Home: React.FC = () => {
 
     // Get the blocked dates and hours on page landing and everytime the month changes
     useEffect(() => {
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth"), false).then(value => {
             methods?.setValue('blockedHoursAndDays', value)
         })
     }, [methods?.watch("currentMonth")])
@@ -61,7 +61,7 @@ const Home: React.FC = () => {
                 enqueueSnackbar("Booking request sent - you will be notified via email", {variant: 'success'})
 
                 // Call the service that returns the blocked dates and hours to update the values
-                getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+                getBlockedDatesAndHours(methods?.watch("currentMonth"), false).then(value => {
                     methods?.setValue('blockedHoursAndDays', value)
                 })
             })

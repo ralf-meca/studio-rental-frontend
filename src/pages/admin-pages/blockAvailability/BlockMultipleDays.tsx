@@ -43,7 +43,7 @@ const BlockMultipleDays: React.FC<IBlockSingleDayProps> = () => {
 
     // Get the blocked dates and hours on page landing and everytime the month changes
     useEffect(() => {
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then((data) => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth"), true).then((data) => {
             setBlockedDays(data?.filter((el: any) => el.isAllDayBlocked).map((el: any) => el.date))
         })
     }, [methods?.watch("currentMonth")])
@@ -56,13 +56,13 @@ const BlockMultipleDays: React.FC<IBlockSingleDayProps> = () => {
 
 
         await axios.put(`/api/blocked-availability/bulk-block-unblock/`, {
-            dates: selectedDates, isBlockedByAdmin: isDateToBeBlocked
+            dates: selectedDates, isBlockedByAdmin: isDateToBeBlocked, withCredentials: true
         }).then(async (value) => {
             if (!value) {
                 return
             }
             // We rerun the api to get the details
-            await getBlockedDatesAndHours(methods?.watch("currentMonth")).then((data) => {
+            await getBlockedDatesAndHours(methods?.watch("currentMonth"), true).then((data) => {
                 setBlockedDays(data?.filter((el: any) => el.isAllDayBlocked).map((el: any) => el.date))
             })
             enqueueSnackbar(`Ditet u ${isDateToBeBlocked ? "" : "zh"}bllokuan me sukses`, {variant: 'success'})

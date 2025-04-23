@@ -13,7 +13,7 @@ interface ILightsReservationProps {
 const LightsReservation: React.FC<ILightsReservationProps> = () => {
 
 
-    const {rentalList} = useGetRentalsListData(true)
+    const {rentalList} = useGetRentalsListData(true, false)
 
     const methods = useFormContext<IReservationFormValues>()
 

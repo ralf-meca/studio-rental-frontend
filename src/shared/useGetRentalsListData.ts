@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-export const useGetRentalsListData = (showOnlyAvailable: boolean) => {
+export const useGetRentalsListData = (showOnlyAvailable: boolean, isAdmin: boolean) => {
     const [rentalList, setRentalList] = useState<any[]>([])
     const [isRentalListLoading, setIsRentalListLoading] = useState<boolean>(false)
     const [refetchRentalsList, setRefetchRentalsList] = useState<boolean>(false)
     // Get the list of the rentals on page landing
     const getRentalsListData = async () => {
         try {
-            const response = await axios.get("/api/rentals");
+            const response = await axios.get("/api/rentals", {withCredentials: isAdmin});
             const data = showOnlyAvailable ? response?.data?.filter((el: any) => el.status === "available") : response?.data
             // We set the value from the response
             setRentalList(data?.map((el: any) => ({

@@ -35,7 +35,7 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
         "Spotlights",
     ]
 
-    const {rentalList} = useGetRentalsListData(true)
+    const {rentalList} = useGetRentalsListData(true, false)
 
     return <>
         {/* Title */}

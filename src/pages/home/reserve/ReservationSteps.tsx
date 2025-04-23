@@ -117,7 +117,7 @@ const ReservationSteps: React.FC<IReservationStepsProps> = ({activeStep, setActi
             idPhoto: ''
         })
         // Refetch the data so the user will have the updated values if he resets the form.
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth"), false).then(value => {
             methods?.setValue('blockedHoursAndDays', value)
         })
     }

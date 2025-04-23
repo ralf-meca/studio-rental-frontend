@@ -24,7 +24,7 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
     })
 
     const getBlockedDatesAndHoursList = () => {
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then(value => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth"), true).then(value => {
             methods?.setValue('blockedHoursAndDays', value)
         })
     }
@@ -49,7 +49,8 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
         if (isUnblockingHours) {
 
             await axios.put(`/api/blocked-availability/remove-blocked-hours/${formValues.date}`, {
-                hoursToUnblock: blockedHours
+                hoursToUnblock: blockedHours,
+                withCredentials: true,
             }).then(async (value) => {
                 if (!value) {
                     return
@@ -70,7 +71,8 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
             // If blockedHours exist it means we are updating an existing object, so we use a different method
             if (!!blockedHoursResponseObject?.hoursBlocked) {
                 await axios.put(`/api/blocked-availability/add/${formValues?.date}`, {
-                    hoursBlocked: blockedHours
+                    hoursBlocked: blockedHours,
+                    withCredentials: true
                 }).then(async (value) => {
                     if (!value) {
                         return
@@ -79,7 +81,7 @@ const BlockHours: React.FC<IBlockHoursProps> = () => {
                     enqueueSnackbar('Oret u bllokuan me sukses', {variant: 'success'})
                 })
             } else {
-                await axios.post('/api/blocked-availability/hours', {...payload})
+                await axios.post('/api/blocked-availability/hours', {...payload, withCredentials: true})
                     .then(async (value) => {
                         if (!value) {
                             return

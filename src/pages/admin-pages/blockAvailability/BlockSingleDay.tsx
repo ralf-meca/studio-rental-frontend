@@ -26,7 +26,7 @@ const BlockSingleDay: React.FC<IBlockSingleDayProps> = () => {
 
     // Get the blocked dates and hours on page landing and everytime the month changes
     useEffect(() => {
-        getBlockedDatesAndHours(methods?.watch("currentMonth")).then((data) => {
+        getBlockedDatesAndHours(methods?.watch("currentMonth"), true).then((data) => {
             setBlockedDays(data?.filter((el: any) => el.isAllDayBlocked).map((el: any) => el.date))
         })
     }, [methods?.watch("currentMonth")])
@@ -36,13 +36,13 @@ const BlockSingleDay: React.FC<IBlockSingleDayProps> = () => {
         const isDateToBeBlocked = !blockedDays?.includes(dateSelected)
 
         await axios.put(`/api/blocked-availability/block-unblock-day/${dateSelected}`, {
-            isBlocked: isDateToBeBlocked
+            isBlocked: isDateToBeBlocked, withCredentials: true
         }).then(async (value) => {
             if (!value) {
                 return
             }
             // We rerun the api to get the details
-            await getBlockedDatesAndHours(methods?.watch("currentMonth")).then((data) => {
+            await getBlockedDatesAndHours(methods?.watch("currentMonth"), true).then((data) => {
                 setBlockedDays(data?.filter((el: any) => el.isAllDayBlocked).map((el: any) => el.date))
             })
             enqueueSnackbar(`Dita u ${isDateToBeBlocked ? "" : "zh"}bllokua me sukses`, {variant: 'success'})
@@ -51,7 +51,7 @@ const BlockSingleDay: React.FC<IBlockSingleDayProps> = () => {
 
     // Custom day component to render each selected day with conditional styling
     const CustomDay = (dayProps: any) => {
-        const { day, ...other } = dayProps;
+        const {day, ...other} = dayProps;
         const dateFormatted = day.format('YYYY-MM-DD');
         const isBlocked = blockedDays?.includes(dateFormatted);
 

@@ -17,7 +17,7 @@ const RentalsPage: React.FC<ILightRentalsProps> = () => {
     const [selectedRental, setSelectedRental] = useState<IRentalFormValues>()
 
 
-    const {rentalList, isRentalListLoading, setRefetchRentalsList} = useGetRentalsListData(false)
+    const {rentalList, isRentalListLoading, setRefetchRentalsList} = useGetRentalsListData(false, true)
 
     const handleEditRental = (params: GridCellParams) => {
         setSelectedRental(params?.row)

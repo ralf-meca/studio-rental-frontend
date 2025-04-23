@@ -50,6 +50,7 @@ const ReservationDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDial
         await axios.patch(`/api/reservations/${reservation?.id}`, {
             status: status,
             doorCode: methods?.watch("doorCode"),
+            withCredentials: true,
         }).then(() => {
             callBackFunction()
             setOpenDialog(false);

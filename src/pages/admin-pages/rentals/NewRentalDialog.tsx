@@ -34,7 +34,8 @@ const NewRentalDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialog
             formData.append("img", formValues.image[0]); // Get the first file
 
             axios.post('/api/rentals', formData, {
-                headers: {'Content-Type': 'multipart/form-data'}
+                headers: {'Content-Type': 'multipart/form-data'},
+                withCredentials: true
             }).then(() => {
                 enqueueSnackbar("Pajisja e re u shtua me sukses", {variant: 'success'})
             })
@@ -65,7 +66,7 @@ const NewRentalDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialog
 
                 <div className="row d-flex justify-content-center">
                     {!!methods?.watch("image").length &&
-                        <img src={methods?.watch("image")} alt="uploadedImage"
+                        <img src={URL.createObjectURL(methods?.watch("image")?.[0])} alt="uploadedImage"
                              style={{maxWidth: "250px", filter: "drop-shadow(10px 8px 10px #B2B2B2)"}}/>
                     }
                 </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import "./AdminLogin.css"
 
@@ -9,9 +9,11 @@ const AdminLogin = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        // todo @ralf WIP, to resolve admin token handled in the cookies
         try {
-            const response = await axios.post('/api/admin/login', { username, password });
-            localStorage.setItem('token', response.data.token);
+            const response = await axios.post('/api/admin/login', {username, password}, {
+                withCredentials: true
+            })
             window.location.href = '/admin/reservations';
         } catch (err) {
             setError('Invalid credentials');

@@ -33,7 +33,8 @@ const EditRentalDialog: React.FC<IOrderDialogProps> = ({openDialog, setOpenDialo
             }
 
             await axios.put(`/api/rentals/${rental?.id}`, formData,{
-                headers: {'Content-Type': 'multipart/form-data'}
+                headers: {'Content-Type': 'multipart/form-data'},
+                withCredentials: true
             }).then(() => {
                 enqueueSnackbar("Pajisja u modifikua me sukses", {variant: 'success'})
                 setOpenDialog(false)

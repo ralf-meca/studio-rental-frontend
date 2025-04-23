@@ -11,6 +11,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import VisualMindsIcon from './../../assets/brand/visual-minds-logo-black.png'
 import {useLocation, useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const NAVIGATION: Navigation = [
     {
@@ -94,8 +95,9 @@ const AdminLayout: React.FC<IAdminLayoutProps> = ({children}) => {
                 navigate: (path: string | URL) => {
 
                     if (path === "/logout") {
-                        localStorage.removeItem('token')
-                        navigate('/admin/login')
+                        axios.post('/api/admin/logout', {}, {withCredentials: true}).then(() => {
+                            navigate('/admin/login')
+                        })
                         return
                     }
 

@@ -27,7 +27,7 @@ const ReservationsPage: React.FC = () => {
 
     const getListData = async () => {
         try {
-            const response = await axios.get(`/api/reservations/month/${monthSelected}`);
+            const response = await axios.get(`/api/reservations/month/${monthSelected}`, {withCredentials: true});
             // We set the value from the response
             setReservationList(response.data.map((el: any) => ({
                 id: el?._id,
