@@ -1,50 +1,110 @@
-# React + TypeScript + Vite
+# 🎥 Studio Rental – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend web application for managing studio reservations, built with **React**, **TypeScript**, and **Vite**.  
+The platform provides a **guided booking flow for users** and a **protected admin area** for managing reservations, availability, and rentals.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- React 19
+- TypeScript
+- Vite
+- Yarn
+- React Hook Form
+- Material UI (MUI)
+- Day.js
+- Axios
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🏠 User Experience
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Home Page
+- Image slider showcasing the studio
+- Step-by-step reservation flow with a vertical stepper
+
+### Reservation Flow
+1. **Select Date & Hours**
+    - Dynamic availability handling
+    - Blocked dates and hours are respected
+    - Minimum booking duration enforced
+2. **Select Rentable Equipment**
+    - Optional lights and accessories
+3. **Accept Rules & Conditions**
+4. **Submit Reservation**
+    - User receives a confirmation notification and email
+    - Reservation is created with *pending* status
+
+Form state, validation, and step transitions are handled using **React Hook Form**.
+
+---
+
+## 🧑‍💼 Admin Area
+
+The admin panel allows full control over the booking system.
+
+### Reservations
+- View reservations grouped by month
+- Accept or deny pending reservations
+- Visual indicators for expired or outdated bookings
+
+### Availability Management
+- Block **single dates**
+- Block **specific hours**
+- Block **ranges of dates**
+- Updates are reflected instantly in the user booking flow
+
+### Rentals Management
+- Create and manage rentable items (e.g. lights)
+- Rentals appear dynamically in the user reservation flow
+
+---
+
+## 📸 Screenshots
+
+> _Screenshots are for demonstration purposes._
+
+### User – Home & Reservation Flow
+![Home Page](./src/assets/screenshots/1.png)
+![Date & Hours Selection](./src/assets/screenshots/2.png)
+![Date & Hours Selection](./src/assets/screenshots/3.png)
+![Reservation Stepper](./src/assets/screenshots/4.png)
+![Reservation Stepper](./src/assets/screenshots/5.png)
+
+### Admin – Reservations
+![Admin Reservations](./src/assets/screenshots/6.png)
+![Reservation Details Dialog](./src/assets/screenshots/7.png)
+
+### Admin – Availability 
+![Block Availability](./src/assets/screenshots/10.png)
+![Block Availability](./src/assets/screenshots/11.png)
+![Block Availability](./src/assets/screenshots/12.png)
+### Admin – Rentals
+![Block Availability](./src/assets/screenshots/13.png)
+![Block Availability](./src/assets/screenshots/14.png)
+
+---
+
+## 📊 Data & State Management
+
+- API communication via Axios
+- Date handling with Day.js
+- Conditional UI states for loading, errors, and disabled actions
+- Admin authentication via token stored in `localStorage`
+
+---
+
+## 🚀 Getting Started
+
+```bash
+yarn install
+yarn dev
 ```
+## 👤 Author
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Ralf Meça
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Front-End Developer
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+React • TypeScript • Data-driven UI

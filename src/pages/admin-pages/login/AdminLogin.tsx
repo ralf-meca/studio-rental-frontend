@@ -14,9 +14,10 @@ const AdminLogin = () => {
             const response = await axios.post('/api/admin/login', {username, password}, {
                 withCredentials: true
             })
+            localStorage.setItem('token', response.data.token);
             window.location.href = '/admin/reservations';
         } catch (err) {
-            setError('Invalid credentials');
+            err && setError('Invalid credentials');
         }
     };
 

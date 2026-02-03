@@ -30,7 +30,7 @@ const HeaderFooter: React.FC<IHeaderFooterProps> = (props) => {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12 text-center">
-                        <span id="copyright-span">Copyright &copy; 2025 Visual Minds</span>
+                        <span id="copyright-span">Copyright &copy; 2025 Ralf Meca</span>
                     </div>
                 </div>
             </div>

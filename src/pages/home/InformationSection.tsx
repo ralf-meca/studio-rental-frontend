@@ -240,7 +240,8 @@ const InformationSection: React.FC<IInformationSectionProps> = () => {
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+                    // src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAuH4PNHl8sBP4XPlNtJ-oGi8RWkRRBuq4
                 &q=Visual+Minds+Studio,Tiranë,Albania`}>
                 </iframe>
             </div>
